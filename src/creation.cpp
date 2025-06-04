@@ -1,12 +1,13 @@
 #include <SDL2/SDL.h>
 #include <stdexcept>
 
+#include "./configs.hpp"
 #include "./creation.hpp"
 
 SDL_Window* createWindow() {
   SDL_Window* window = SDL_CreateWindow(
-      "Pong lgraziani", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920,
-      1080, SDL_WINDOW_FULLSCREEN_DESKTOP);
+      "Pong lgraziani", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+      APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
   if (!window) {
     SDL_Log("Failed to create window: %s", SDL_GetError());

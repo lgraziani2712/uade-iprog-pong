@@ -4,7 +4,10 @@
 #include "./configs.hpp"
 #include "./game_loop.hpp"
 
-void gameLoop(SDL_Renderer* renderer, std::function<void(SDL_Renderer* renderer)> game) {
+void gameLoop(SDL_Renderer* renderer,
+              std::function<void(SDL_Renderer* renderer, double deltaTime,
+                                 SDL_Event& event)>
+                  gameRender) {
   // Esperar a que se cierre la ventana
   bool running = true;
   SDL_Event event;
@@ -24,14 +27,29 @@ void gameLoop(SDL_Renderer* renderer, std::function<void(SDL_Renderer* renderer)
     deltaTime = (double)((now - last) / (double)SDL_GetPerformanceFrequency());
 
     while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_QUIT) {
-        running = false;
+      switch (event.type) {
+        case SDL_QUIT:
+          running = false;
+          break;
+        case SDL_KEYDOWN:
+          if (event.key.keysym.sym == SDLK_ESCAPE) {
+            running = false;
+          }
+          break;
       }
-    }
-    game(renderer);
+      //
+      SDL_SetRenderDrawColor(renderer, 0x0, 0x0, 0x0, 0xFF);
+      SDL_RenderClear(renderer);
 
-    if (deltaTime < FRAME_TARGET_TIME) {
-      SDL_Delay((Uint32)((FRAME_TARGET_TIME - deltaTime) * 1000));
+      // Renderizado del frame
+      gameRender(renderer, deltaTime, event);
+
+      // Entrega el backbuffer al render
+      SDL_RenderPresent(renderer);
+    }
+
+    if (deltaTime < APP_FRAME_TARGET_TIME) {
+      SDL_Delay((Uint32)((APP_FRAME_TARGET_TIME - deltaTime) * 1000));
     }
   }
 }

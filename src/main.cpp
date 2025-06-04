@@ -8,8 +8,9 @@
 #include "./logic/red_window.hpp"
 
 int SDL_main(int argc, char* argv[]) {
+  // Inicializa los componentes de SDL
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-    SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+    SDL_Log("Incapaz de inicializar SDL: %s", SDL_GetError());
     return 1;
   }
   SDL_Window* window = NULL;
@@ -20,8 +21,8 @@ int SDL_main(int argc, char* argv[]) {
   // hace nada excepto esperar a que se cierre el programa. Cuando ocurra el
   // cierre y la instancia se esté por destruir, se invocará la función de
   // cleanUp.
-  auto guard = cleanUpCreation([&]() {
-    std::cout << "Cleaning up before shutdown.\n";
+  auto guarda = logicaDeLimpiezaBuild([&]() {
+    std::cout << "Limpieza del entorno antes de cerrar.\n";
 
     if (renderer != NULL) {
       SDL_DestroyRenderer(renderer);
@@ -36,7 +37,9 @@ int SDL_main(int argc, char* argv[]) {
   window = createWindow();
   renderer = createRenderer(window);
 
-  gameLoop(renderer, redWindowGame);
+  // Inicializo el game loop y paso la función que renderiza el juego que quiero
+  // correr.
+  gameLoop(renderer, redWindowGameRender);
 
   return 0;
 }

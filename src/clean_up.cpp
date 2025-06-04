@@ -2,9 +2,10 @@
 
 #include "./clean_up.hpp"
 
-FinalAction::FinalAction(std::function<void()> fn) : cleanUp(std::move(fn)) {}
-FinalAction::~FinalAction() { cleanUp(); }
+AccionFinal::AccionFinal(std::function<void()> fn)
+    : hacerLimpieza(std::move(fn)) {}
+AccionFinal::~AccionFinal() { hacerLimpieza(); }
 
-FinalAction cleanUpCreation(std::function<void()> fn) {
-  return FinalAction(std::move(fn));
+AccionFinal logicaDeLimpiezaBuild(std::function<void()> fn) {
+  return AccionFinal(std::move(fn));
 }

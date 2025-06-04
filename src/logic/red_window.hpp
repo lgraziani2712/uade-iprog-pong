@@ -1,3 +1,3 @@
 #pragma once
 
-void redWindowGame(SDL_Renderer* renderer);
+void redWindowGameRender(SDL_Renderer* renderer, double deltaTime, SDL_Event& event);

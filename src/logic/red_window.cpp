@@ -2,9 +2,9 @@
 
 #include "red_window.hpp"
 
-void redWindowGame(SDL_Renderer* renderer) {
+void redWindowGameRender(SDL_Renderer* renderer, double deltaTime,
+                         SDL_Event& event) {
   // Color de fondo (rojo)
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
   SDL_RenderClear(renderer);
-  SDL_RenderPresent(renderer);
 }
