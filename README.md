@@ -1,75 +1,106 @@
-# Pong project for "UADE::Introducción a la programación"
+# Pong - Proyecto para "UADE::Introducción a la programación"
 
-## Requirements
+## Requisitos técnicos
 
-This project works with **Conan** + **CMake** to simplify dependency installation, building and debugging.
+Este proyecto funciona con **Conan** + **CMake** para simplificar el proceso de instalación de dependencias, _buildeo_ y _debuggeo_.
 
-Before even running anything, we need to make sure we have the tools installed in our computer:
+Antes de correr nada, necesitamos asegurarnos que tenemos instaladas estas dependencias en nuestra computadora:
 
 ### Conan
 
-We need to have `python` installed in our pc so we can install it using the official command:
+De forma general y muy resumidamente, Conan es una herramienta para administrar dependencias de un proyecto escrito en C o C++. Para poder instalar Conan necesitamos tener instalado `python`. Python está fuera del alcance de este proyecto por lo que se recomienda buscar la forma oficial de instalarlo a parte. A continuación el comando para instalar Conan:
 
 ```sh
 pip install conan
 ```
 
-Using the pip installer is important to have autocomplete on the conanfile.py file.
+Tener `python` y con este comando recomendado de forma oficial como el proceso de instalación estándar nos aseguramos de tener autocompletado en los archivos `conanfile.py`.
+
+#### Configuración extra para Conan
+
+- **Cambiar el path por defecto donde Conan instala dependencias**: por defecto Conan guarda toda la información dentro de `C:\{USER}\.conan`. Si se desea cambiar el path por defecto, se debe crear una **variable de entorno** con `CONAN_HOME` como valor de la clave y un path como valor, por ejemplo: `CONAN_HOME="D:\.conan"`.
 
 ### CMake
 
-CMake, cl.exe and all the tooling is installed with the MSVC from Visual Studio. Should be installed the "Desktop development with C++" in Visual Studio Installer.
+`CMake`, `cl.exe` y todas las herramientas del ecosistema de C++ son instaladas por MSVC de Visual Studio. En el installer de Visual Studio debería haberse seleccionado la opción "Desktop development with C++".
 
-## Common commands
+## Comandos comunes
 
-> If we're running commands from the CLI, we need to open the "Developer Command Prompt for VS 2022".
+> Si ejecutamos comandos en la terminal, necesitamos abrir la terminal "Developer Command Prompt for VS 2022".
 
-### (First command) To install dependencies and configure conan:
+### (Primer comando) Configurar el perfil por defecto de conan:
+
+```sh
+conan profile detect
+```
+
+### Instalar dependencias para builds release y configurar conan:
 
 ```sh
 conan install . --build=missing
 ```
 
-> Install the requirements specified in a recipe (conanfile.py or conanfile.txt).
-> If any requirement is not found in the local cache, it will iterate the remotes looking for it. When the full dependency graph is computed, and all dependencies recipes have been found, it will look for binary packages matching the current settings.
+> Con este comando Conan instala las dependencias especificadas en el archivo de recetas `conanfile.py`.
+> Si alguna de estas dependencias no existe en el caché local, los buscará en los repositorios remotos. Cuando el grafo de dependencias esté computado y todas las dependencias fueran encontradas, buscará los binarios que coincidan con las settings de la computadora actual (que fueron generadas durante la detección del perfil).
 >
-> If no binary package is found for some or several dependencies, it will error, unless the '--build' argument is used to build it from source.
+> Si no hay un binario para alguna de las dependencias, fallará, a menos que se haya pasado el argumento `--build`, que indica a Conan que buildee las dependencias de forma local.
 >
-> After installation of packages, the generators and deployers will be called.
+> Luego de la instalación de las dependencias, Conan llamará a los "generators" y "deployers".
 >
-> Documentation from the `conan install --help` command.
+> Esta documentación fue traducida sin inteligencia artificial del texto que el comando `conan install --help` entrega.
 
-### To configure the Debug setting:
+### Instalar y construir dependencias con el perfil de Debug:
 
 ```sh
-conan install . -s build_type=Debug
+conan install . -s build_type=Debug --build=missing
 ```
 
-### Building using cmake
-
-First, required:
+### Construir la aplicación con CMake
 
 ```sh
 cmake --preset conan-default
 ```
 
-For debugging:
+Para build de debuggeo:
 
 ```sh
 cmake --build --preset conan-debug
 ```
 
-For release:
+Para build release:
 
 ```sh
 cmake --build --preset conan-release
 ```
 
-These two last commands will create the executable files inside the `build/Debug` or `build/Release` folders.
+Estos últimos dos comandos crean los ejecutables dentro de las carpetas `build/Debug` y `build/Release` respectivamente.
 
-## Common configuration with VSCode
+## Configuración básica para VSCode
 
-- Required extensions are declared as recommendations.
-- Run the common comands for conan and cmake to generate the build presets at least one time.
-- The task to regenerate the debug version is already configured.
-- Launch is setted to execute the debug version.
+- Las extensiones recomendades están declaradas en `.vscode/extensions.json`.
+- Ejecutar los comandos básicos para Conan y CMake para generar los presets de build al menos una vez antes de abrir VSCode.
+- La tarea para regenerar el build de Debug está configurada en `.vscode/tasks.json`.
+- La ejecución por defecto está configurada para que levante la versión de Debug y definida en `.vscode/launch.json`.
+
+## Configuración del entorno
+
+Conan detecta y declara las siguientes propiedades en el perfil por defecto:
+
+```ini
+[settings]
+arch=x86_64
+build_type=Release
+compiler=msvc
+compiler.cppstd=14
+compiler.runtime=dynamic
+compiler.version=194
+os=Windows
+```
+
+> RECOMENDACIÓN: cambiar el valor de la entrada `compiler.cppstd` de 14 a 17 al menos.
+
+Para saber dónde guarda el perfil por defecto podemos correr el siguiente comando:
+
+```sh
+ conan profile path default
+```
