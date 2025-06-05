@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include "./vec.hpp"
 
+#define BALL_SPEED 1.0f
 #define BALL_WIDTH 15
 #define BALL_HEIGHT 15
 

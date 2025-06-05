@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include "../models/paleta.hpp"
 #include "../models/pelota.hpp"
 
 class PongRender {
@@ -10,7 +11,11 @@ class PongRender {
 
  private:
   SDL_Window* window;
-  Pelota pelota;
   int width, height;
+
+  Pelota pelota;
+  Paleta paleta1;
+  Paleta paleta2;
+
   void DibujarRed(SDL_Renderer* renderer);
 };

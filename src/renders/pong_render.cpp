@@ -6,6 +6,8 @@ PongRender::PongRender(SDL_Window* window) : window(window) {
   SDL_GetWindowSize(window, &width, &height);
 
   pelota = Pelota(width / 2.0f, height / 2.0f);
+  paleta1 = Paleta(50.0f, height / 2.0f);
+  paleta2 = Paleta(width - 50.0f, height / 2.0f);
 }
 
 void PongRender::Dibujar(SDL_Renderer* renderer, double deltaTime,
@@ -19,6 +21,8 @@ void PongRender::Dibujar(SDL_Renderer* renderer, double deltaTime,
   // Dibujo los objetos
   DibujarRed(renderer);
   pelota.Dibujar(renderer);
+  paleta1.Dibujar(renderer);
+  paleta2.Dibujar(renderer);
 }
 
 void PongRender::DibujarRed(SDL_Renderer* renderer) {
