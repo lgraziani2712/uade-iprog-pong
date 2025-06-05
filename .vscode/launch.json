@@ -8,7 +8,6 @@
       "program": "${workspaceFolder}/build/Debug/pong.exe",
       "args": [],
       "stopAtEntry": false,
-      "externalConsole": false,
       "cwd": "${fileDirname}",
       "environment": [],
       "console": "externalTerminal"

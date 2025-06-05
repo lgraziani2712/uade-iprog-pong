@@ -5,7 +5,7 @@
 #include "./configs.hpp"
 #include "./creation.hpp"
 #include "./game_loop.hpp"
-#include "./logic/red_window.hpp"
+#include "./renders/pong_render.hpp"
 
 int SDL_main(int argc, char* argv[]) {
   // Inicializa los componentes de SDL
@@ -15,6 +15,7 @@ int SDL_main(int argc, char* argv[]) {
   }
   SDL_Window* window = NULL;
   SDL_Renderer* renderer = NULL;
+  PongRender gameRender = NULL;
 
   // Esta variable contiene una instancia de tipo FinalAction (auto le pide al
   // compilador que deduzca automáticamente el tipo de variable). Esta guarda no
@@ -36,10 +37,11 @@ int SDL_main(int argc, char* argv[]) {
   // Instancio las cosas que necesito
   window = createWindow();
   renderer = createRenderer(window);
+  gameRender = PongRender(window);
 
   // Inicializo el game loop y paso la función que renderiza el juego que quiero
   // correr.
-  gameLoop(renderer, redWindowGameRender);
+  gameLoop(window, renderer, gameRender);
 
   return 0;
 }

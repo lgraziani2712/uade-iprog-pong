@@ -1,6 +1,6 @@
 #include <functional>
 
-#include "./clean_up.hpp"
+#include "clean_up.hpp"
 
 AccionFinal::AccionFinal(std::function<void()> fn)
     : hacerLimpieza(std::move(fn)) {}

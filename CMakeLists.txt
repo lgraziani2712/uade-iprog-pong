@@ -5,5 +5,16 @@ find_package(SDL2 REQUIRED CONFIG)
 
 set(CMAKE_WIN32_EXECUTABLE TRUE)  # <- Esto es opcional, pero ayuda a evitar que espere `main()`
 
-add_executable(${PROJECT_NAME} src)
+file(GLOB SOURCES
+    src/*.cpp
+    src/*.hpp
+    src/renders/*.cpp
+    src/renders/*.hpp
+    src/models/*.cpp
+    src/models/*.hpp
+)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main SDL2::SDL2)

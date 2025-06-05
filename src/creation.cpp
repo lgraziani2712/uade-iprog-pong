@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 #include "./configs.hpp"
-#include "./creation.hpp"
+#include "creation.hpp"
 
 SDL_Window* createWindow() {
   SDL_Window* window = SDL_CreateWindow(
