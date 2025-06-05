@@ -9,7 +9,6 @@
 
 class Pelota {
  public:
-  Pelota();
   Pelota(float x, float y);
   void Dibujar(SDL_Renderer* renderer);
 

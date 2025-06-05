@@ -1,5 +1,3 @@
-#include <SDL2/SDL.h>
-
 #include "red_window.hpp"
 
 void redWindowGameRender(SDL_Window* window, SDL_Renderer* renderer,

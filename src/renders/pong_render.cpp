@@ -1,17 +1,20 @@
-#include <SDL2/SDL.h>
-
 #include "pong_render.hpp"
 
-PongRender::PongRender(SDL_Window* window) : window(window) {
+PongRender::PongRender(SDL_Window* window, SDL_Renderer* renderer,
+                       TTF_Font* fuenteDelPuntaje)
+    : window(window), renderer(renderer), fuenteDelPuntaje(fuenteDelPuntaje) {
   SDL_GetWindowSize(window, &width, &height);
 
-  pelota = Pelota(width / 2.0f, height / 2.0f);
-  paleta1 = Paleta(50.0f, height / 2.0f);
-  paleta2 = Paleta(width - 50.0f, height / 2.0f);
+  pelota = std::make_unique<Pelota>(width / 2.0f, height / 2.0f);
+  paleta1 = std::make_unique<Paleta>(50.0f, height / 2.0f);
+  paleta2 = std::make_unique<Paleta>(width - 50.0f, height / 2.0f);
+  puntaje1 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
+                                              Vec(width / 4, 20));
+  puntaje2 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
+                                              Vec(3 * width / 4, 20));
 }
 
-void PongRender::Dibujar(SDL_Renderer* renderer, double deltaTime,
-                         SDL_Event& event) {
+void PongRender::Dibujar(double deltaTime, SDL_Event& event) {
   // Limpia la pantalla en negro
   SDL_SetRenderDrawColor(renderer, 0x0, 0x0, 0x0, 0xFF);
   SDL_RenderClear(renderer);
@@ -19,13 +22,15 @@ void PongRender::Dibujar(SDL_Renderer* renderer, double deltaTime,
   SDL_GetWindowSize(window, &width, &height);
 
   // Dibujo los objetos
-  DibujarRed(renderer);
-  pelota.Dibujar(renderer);
-  paleta1.Dibujar(renderer);
-  paleta2.Dibujar(renderer);
+  DibujarRed();
+  pelota->Dibujar(renderer);
+  paleta1->Dibujar(renderer);
+  paleta2->Dibujar(renderer);
+  puntaje1->Dibujar();
+  puntaje2->Dibujar();
 }
 
-void PongRender::DibujarRed(SDL_Renderer* renderer) {
+void PongRender::DibujarRed() {
   // Dice a SDL que setee el render con color blanco
   SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 

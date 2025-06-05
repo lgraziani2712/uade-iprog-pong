@@ -1,11 +1,8 @@
-#include <SDL2/SDL.h>
-#include <functional>
-
-#include "./configs.hpp"
 #include "game_loop.hpp"
+#include "./configs.hpp"
 
 void gameLoop(SDL_Window* window, SDL_Renderer* renderer,
-              PongRender gameRender) {
+              PongRender* gameRender) {
   // Esperar a que se cierre la ventana
   bool running = true;
   SDL_Event event;
@@ -40,7 +37,7 @@ void gameLoop(SDL_Window* window, SDL_Renderer* renderer,
           (now - last) / static_cast<double>(SDL_GetPerformanceFrequency());
 
       // 3. Update game state using delta time
-      gameRender.Dibujar(renderer, deltaTime, event);
+      gameRender->Dibujar(deltaTime, event);
 
       // 4. Render
       // Entrega el backbuffer al render

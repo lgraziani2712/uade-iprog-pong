@@ -9,7 +9,6 @@
 
 class Paleta {
  public:
-  Paleta();
   Paleta(float x, float y);
 
   void Dibujar(SDL_Renderer* renderer);

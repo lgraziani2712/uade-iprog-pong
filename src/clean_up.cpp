@@ -1,5 +1,3 @@
-#include <functional>
-
 #include "clean_up.hpp"
 
 AccionFinal::AccionFinal(std::function<void()> fn)

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 project(pong)
 
 find_package(SDL2 REQUIRED CONFIG)
+find_package(SDL2_ttf REQUIRED CONFIG)
 
 set(CMAKE_WIN32_EXECUTABLE TRUE)  # <- Esto es opcional, pero ayuda a evitar que espere `main()`
 
@@ -17,4 +18,4 @@ file(GLOB SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main SDL2::SDL2)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main SDL2::SDL2 SDL2_ttf::SDL2_ttf-static)
