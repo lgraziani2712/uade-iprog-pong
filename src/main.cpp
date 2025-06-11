@@ -2,12 +2,11 @@
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <memory>
-
-#include "./clean_up.hpp"
-#include "./configs.hpp"
-#include "./creation.hpp"
-#include "./game_loop.hpp"
-#include "./renders/pong_render.hpp"
+#include "clean_up.hpp"
+#include "configs.hpp"
+#include "creation.hpp"
+#include "game_loop.hpp"
+#include "renders/pong_render.hpp"
 
 int SDL_main(int argc, char* argv[]) {
   // Inicializa los componentes de SDL
@@ -48,7 +47,7 @@ int SDL_main(int argc, char* argv[]) {
   // Instancio las cosas que necesito
   window = createWindow();
   renderer = createRenderer(window);
-  fuenteDelPuntaje = TTF_OpenFont("./assets/HurmitNerdFont-Bold.otf", 40);
+  fuenteDelPuntaje = TTF_OpenFont("assets/HurmitNerdFont-Bold.otf", 40);
   // Se libera automáticamente al finalizar la función main
   auto gameRender =
       std::make_unique<PongRender>(window, renderer, fuenteDelPuntaje);

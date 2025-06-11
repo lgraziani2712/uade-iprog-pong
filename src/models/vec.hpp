@@ -12,7 +12,5 @@ class Vec {
 
   Vec operator*(float rhs);
 
-  Vec& operator*=(Vec const& rhs);
-
   float x, y;
 };

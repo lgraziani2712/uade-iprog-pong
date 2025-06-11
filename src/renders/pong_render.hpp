@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <memory>
+#include "../models/input.hpp"
 #include "../models/paleta.hpp"
 #include "../models/pelota.hpp"
 #include "../models/puntaje_jugador.hpp"
@@ -11,7 +12,9 @@ class PongRender {
  public:
   PongRender(SDL_Window* window, SDL_Renderer* renderer,
              TTF_Font* fuenteDelPuntaje);
-  void Dibujar(double deltaTime, SDL_Event& event);
+  bool Corriendo();
+  void ActualizarInputs();
+  void Dibujar(double deltaTime);
 
  private:
   SDL_Window* window;
@@ -28,6 +31,7 @@ class PongRender {
   std::unique_ptr<Paleta> paleta2;
   std::unique_ptr<PuntajeJugador> puntaje1;
   std::unique_ptr<PuntajeJugador> puntaje2;
+  std::unique_ptr<Input> input;
 
   void DibujarRed();
 };

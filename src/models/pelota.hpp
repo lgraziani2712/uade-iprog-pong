@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include "./vec.hpp"
+#include "vec.hpp"
 
 #define BALL_SPEED 1.0f
 #define BALL_WIDTH 15

@@ -18,10 +18,3 @@ Vec& Vec::operator+=(Vec const& rhs) {
 
 // Define el operador multiplicación
 Vec Vec::operator*(float rhs) { return Vec(x * rhs, y * rhs); }
-// Define el operador *=
-Vec& Vec::operator*=(Vec const& rhs) {
-  x *= rhs.x;
-  y *= rhs.y;
-
-  return *this;
-}

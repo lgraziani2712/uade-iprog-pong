@@ -12,14 +12,23 @@ PongRender::PongRender(SDL_Window* window, SDL_Renderer* renderer,
                                               Vec(width / 4, 20));
   puntaje2 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
                                               Vec(3 * width / 4, 20));
+  input = std::make_unique<Input>();
 }
 
-void PongRender::Dibujar(double deltaTime, SDL_Event& event) {
+void PongRender::Dibujar(double deltaTime) {
   // Limpia la pantalla en negro
   SDL_SetRenderDrawColor(renderer, 0x0, 0x0, 0x0, 0xFF);
   SDL_RenderClear(renderer);
   // Actualizo el width y height
   SDL_GetWindowSize(window, &width, &height);
+
+  // Actualizo los objetos
+  paleta1->AplicarVelocidad(input->Boton(Botones::PaletaUnoArriba),
+                            input->Boton(Botones::PaletaUnoAbajo));
+  paleta2->AplicarVelocidad(input->Boton(Botones::PaletaDosArriba),
+                            input->Boton(Botones::PaletaDosAbajo));
+  paleta1->Actualizar(deltaTime, height);
+  paleta2->Actualizar(deltaTime, height);
 
   // Dibujo los objetos
   DibujarRed();
@@ -29,6 +38,10 @@ void PongRender::Dibujar(double deltaTime, SDL_Event& event) {
   puntaje1->Dibujar();
   puntaje2->Dibujar();
 }
+
+bool PongRender::Corriendo() { return input->Corriendo(); }
+
+void PongRender::ActualizarInputs() { input->Actualizar(); }
 
 void PongRender::DibujarRed() {
   // Dice a SDL que setee el render con color blanco
