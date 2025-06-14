@@ -9,13 +9,10 @@ set(CMAKE_WIN32_EXECUTABLE TRUE)  # <- Esto es opcional, pero ayuda a evitar que
 file(GLOB SOURCES
     src/*.cpp
     src/*.hpp
-    src/*.tpp
     src/renders/*.cpp
     src/renders/*.hpp
-    src/renders/*.tpp
     src/models/*.cpp
     src/models/*.hpp
-    src/models/*.tpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
