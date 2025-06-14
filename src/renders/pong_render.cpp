@@ -15,13 +15,27 @@ PongRender::PongRender(SDL_Window* window, SDL_Renderer* renderer,
   input = std::make_unique<Input>();
 }
 
-void PongRender::Dibujar(double deltaTime) {
+void PongRender::Dibujar() {
   // Limpia la pantalla en negro
   SDL_SetRenderDrawColor(renderer, 0x0, 0x0, 0x0, 0xFF);
   SDL_RenderClear(renderer);
   // Actualizo el width y height
   SDL_GetWindowSize(window, &width, &height);
 
+  // Dibujo los objetos
+  DibujarRed();
+  pelota->Dibujar(renderer);
+  paleta1->Dibujar(renderer);
+  paleta2->Dibujar(renderer);
+  puntaje1->Dibujar();
+  puntaje2->Dibujar();
+}
+
+bool PongRender::Corriendo() { return input->Corriendo(); }
+
+void PongRender::ActualizarInputs() { input->Actualizar(); }
+
+void PongRender::Recalcular(double tiempoTotal, double deltaTime) {
   // Actualizo los objetos
   paleta1->AplicarVelocidad(input->Boton(Botones::PaletaUnoArriba),
                             input->Boton(Botones::PaletaUnoAbajo));
@@ -36,19 +50,7 @@ void PongRender::Dibujar(double deltaTime) {
   paleta1->Actualizar(deltaTime, height);
   paleta2->Actualizar(deltaTime, height);
   pelota->Actualizar(deltaTime);
-
-  // Dibujo los objetos
-  DibujarRed();
-  pelota->Dibujar(renderer);
-  paleta1->Dibujar(renderer);
-  paleta2->Dibujar(renderer);
-  puntaje1->Dibujar();
-  puntaje2->Dibujar();
 }
-
-bool PongRender::Corriendo() { return input->Corriendo(); }
-
-void PongRender::ActualizarInputs() { input->Actualizar(); }
 
 void PongRender::DibujarRed() {
   // Dice a SDL que setee el render con color blanco

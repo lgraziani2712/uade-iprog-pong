@@ -14,7 +14,8 @@ class PongRender {
              TTF_Font* fuenteDelPuntaje);
   bool Corriendo();
   void ActualizarInputs();
-  void Dibujar(double deltaTime);
+  void Recalcular(double tiempoTotal, double deltaTime);
+  void Dibujar();
 
  private:
   SDL_Window* window;

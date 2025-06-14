@@ -44,16 +44,16 @@ bool Paleta::VerificarColision(Pelota* pelota) {
   float vertices[4] = {posicion.x, posicion.x + PADDLE_WIDTH, posicion.y,
                        posicion.y + PADDLE_HEIGHT};
 
-  if (verticesPelota[0] >= vertices[1]) {
+  if (verticesPelota[0] > vertices[1]) {
     return false;
   }
-  if (verticesPelota[1] <= vertices[0]) {
+  if (verticesPelota[1] < vertices[0]) {
     return false;
   }
-  if (verticesPelota[2] >= vertices[3]) {
+  if (verticesPelota[2] > vertices[3]) {
     return false;
   }
-  if (verticesPelota[3] <= vertices[2]) {
+  if (verticesPelota[3] < vertices[2]) {
     return false;
   }
 
