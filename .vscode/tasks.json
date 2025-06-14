@@ -6,7 +6,8 @@
       "type": "shell",
       "command": "cmake --build --preset conan-debug",
       "group": "build",
-      "problemMatcher": []
+      "problemMatcher": [],
+      "options": { "cwd": "${workspaceFolder}" }
     }
   ]
 }

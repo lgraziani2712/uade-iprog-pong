@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include "clean_up.hpp"
@@ -7,6 +8,15 @@
 #include "creation.hpp"
 #include "game_loop.hpp"
 #include "renders/pong_render.hpp"
+
+std::string getAssetsPath(const std::string& relativePath) {
+  namespace fs = std::filesystem;
+
+  // where the binary runs from
+  auto base = fs::current_path();
+
+  return (base / "src" / "assets" / relativePath).string();
+}
 
 int SDL_main(int argc, char* argv[]) {
   // Inicializa los componentes de SDL
@@ -47,7 +57,8 @@ int SDL_main(int argc, char* argv[]) {
   // Instancio las cosas que necesito
   window = createWindow();
   renderer = createRenderer(window);
-  fuenteDelPuntaje = TTF_OpenFont("assets/HurmitNerdFont-Bold.otf", 40);
+  fuenteDelPuntaje =
+      TTF_OpenFont(getAssetsPath("HurmitNerdFont-Bold.otf").c_str(), 40);
   // Se libera automáticamente al finalizar la función main
   auto gameRender =
       std::make_unique<PongRender>(window, renderer, fuenteDelPuntaje);

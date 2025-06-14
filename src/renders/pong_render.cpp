@@ -6,8 +6,8 @@ PongRender::PongRender(SDL_Window* window, SDL_Renderer* renderer,
   SDL_GetWindowSize(window, &width, &height);
 
   pelota = std::make_unique<Pelota>(width / 2.0f, height / 2.0f);
-  paleta1 = std::make_unique<Paleta>(50.0f, height / 2.0f);
-  paleta2 = std::make_unique<Paleta>(width - 50.0f, height / 2.0f);
+  paleta1 = std::make_unique<Paleta>(1, 50.0f, height / 2.0f);
+  paleta2 = std::make_unique<Paleta>(2, width - 50.0f, height / 2.0f);
   puntaje1 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
                                               Vec(width / 4, 20));
   puntaje2 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
@@ -27,8 +27,15 @@ void PongRender::Dibujar(double deltaTime) {
                             input->Boton(Botones::PaletaUnoAbajo));
   paleta2->AplicarVelocidad(input->Boton(Botones::PaletaDosArriba),
                             input->Boton(Botones::PaletaDosAbajo));
+
+  if (paleta1->VerificarColision(pelota.get()) ||
+      paleta2->VerificarColision(pelota.get())) {
+    pelota->Rebotar();
+  }
+
   paleta1->Actualizar(deltaTime, height);
   paleta2->Actualizar(deltaTime, height);
+  pelota->Actualizar(deltaTime);
 
   // Dibujo los objetos
   DibujarRed();

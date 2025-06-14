@@ -1,5 +1,7 @@
 #include "game_loop.hpp"
+#include <iostream>
 #include "configs.hpp"
+#include "timer.hpp"
 
 void gameLoop(SDL_Window* window, SDL_Renderer* renderer,
               PongRender* gameRender) {
@@ -12,6 +14,8 @@ void gameLoop(SDL_Window* window, SDL_Renderer* renderer,
   // `delta`.
   double deltaTime = 0;
 
+  Timer<APP_FPS> fps_cap_timer;
+
   while (gameRender->Corriendo()) {
     // 1. Handle input (SDL_PollEvent)
     gameRender->ActualizarInputs();
@@ -20,20 +24,18 @@ void gameLoop(SDL_Window* window, SDL_Renderer* renderer,
     last = now;
     now = SDL_GetPerformanceCounter();
     deltaTime =
-        (now - last) / static_cast<double>(SDL_GetPerformanceFrequency());
+        (double)((now - last) * 1000 / (double)SDL_GetPerformanceFrequency());
 
-    // 3. Update game state using delta time
+    // 3. Update game state using delta time in seconds
     gameRender->Dibujar(deltaTime);
 
     // 4. Render
     // Entrega el backbuffer al render
     SDL_RenderPresent(renderer);
 
-    if (deltaTime < APP_FRAME_TARGET_TIME) {
-      // Timing: el manejo del timing es crucial en el funcionamiento del game
-      // loop porque tiene un impacto directo en la experiencia del jugador.
-      SDL_Delay(
-          static_cast<Uint32>((APP_FRAME_TARGET_TIME - deltaTime) * 1000));
-    }
+    int fps = static_cast<int>(1000.0 / deltaTime);
+    std::cout << "FPS: " << fps << "\n";
+
+    fps_cap_timer.sleep();
   }
 }

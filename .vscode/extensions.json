@@ -1,6 +1,7 @@
 {
   "recommendations": [
-    "ms-vscode.cpptools-extension-pack",
-    "konicy.conan-extension"
+    "gruntfuggly.triggertaskonsave",
+    "konicy.conan-extension",
+    "ms-vscode.cpptools-extension-pack"
   ]
 }

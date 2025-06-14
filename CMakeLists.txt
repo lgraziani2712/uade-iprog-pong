@@ -9,13 +9,21 @@ set(CMAKE_WIN32_EXECUTABLE TRUE)  # <- Esto es opcional, pero ayuda a evitar que
 file(GLOB SOURCES
     src/*.cpp
     src/*.hpp
+    src/*.tpp
     src/renders/*.cpp
     src/renders/*.hpp
+    src/renders/*.tpp
     src/models/*.cpp
     src/models/*.hpp
+    src/models/*.tpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+# Copio assets a la carpeta output
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/src/assets"
+    "$<TARGET_FILE_DIR:${PROJECT_NAME}>/assets")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main SDL2::SDL2 SDL2_ttf::SDL2_ttf-static)
