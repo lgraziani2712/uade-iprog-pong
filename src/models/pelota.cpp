@@ -24,11 +24,18 @@ std::array<float, 4> Pelota::Vertices() {
           posicion.y + PELOTA_ALTO};
 }
 
-void Pelota::Rebotar() {
-  if (preColisionId != colisionId) {
-    velocidad.x = -velocidad.x;
-    preColisionId = colisionId;
+void Pelota::Colision(Contacto contacto) {
+  posicion.x += contacto.penetracion;
+  velocidad.x = -velocidad.x;
+
+  switch (contacto.tipo) {
+    case Colision::Arriba:
+      velocidad.y = -.75f * celeridad;
+      break;
+    case Colision::Abajo:
+      velocidad.y = 0.75f * celeridad;
+      break;
   }
 }
 
-void Pelota::Colision(int id) { colisionId = id; }
+Vec Pelota::Velocidad() { return velocidad; }

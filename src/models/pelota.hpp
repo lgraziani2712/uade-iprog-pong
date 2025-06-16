@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <array>
+#include "colision.hpp"
 #include "vec.hpp"
 
 #define PELOTA_ANCHO 15
@@ -11,16 +12,13 @@ class Pelota {
  public:
   Pelota(float x, float y);
   void Dibujar(SDL_Renderer* renderer);
-  // void AplicarVelocidad(bool arriba, bool abajo);
   void Actualizar(float dt);
   std::array<float, 4> Vertices();
-  void Rebotar();
-  void Colision(int id);
+  void Colision(Contacto contacto);
+  Vec Velocidad();
 
  private:
   float celeridad = 1.0f;
-  int colisionId = 0;
-  int preColisionId = 0;
   Vec posicion;
   Vec velocidad;
   SDL_Rect rect{};

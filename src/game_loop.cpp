@@ -2,6 +2,7 @@
 #include <iostream>
 #include "configs.hpp"
 
+// https://itp380.org/Lab01.2.html
 void gameLoop(SDL_Window* window, SDL_Renderer* renderer,
               PongRender* gameRender) {
   uint64_t tiempoActual = SDL_GetTicks64();

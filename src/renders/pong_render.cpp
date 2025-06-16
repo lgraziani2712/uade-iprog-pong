@@ -36,20 +36,25 @@ bool PongRender::Corriendo() { return input->Corriendo(); }
 void PongRender::ActualizarInputs() { input->Actualizar(); }
 
 void PongRender::Recalcular(double tiempoTotal, double deltaTime) {
-  // Actualizo los objetos
+  // Aplico velocidad de movimiento en paletas
   paleta1->AplicarVelocidad(input->Boton(Botones::PaletaUnoArriba),
                             input->Boton(Botones::PaletaUnoAbajo));
   paleta2->AplicarVelocidad(input->Boton(Botones::PaletaDosArriba),
                             input->Boton(Botones::PaletaDosAbajo));
 
-  if (paleta1->VerificarColision(pelota.get()) ||
-      paleta2->VerificarColision(pelota.get())) {
-    pelota->Rebotar();
-  }
-
+  // Actualizo la posición de cada objeto
   paleta1->Actualizar(deltaTime, height);
   paleta2->Actualizar(deltaTime, height);
   pelota->Actualizar(deltaTime);
+
+  // Verifico posible colisión y corrijo debidamente
+  if (Contacto contacto = paleta1->VerificarColision(pelota.get());
+      contacto.tipo != Colision::Nada) {
+    pelota->Colision(contacto);
+  } else if (contacto = paleta2->VerificarColision(pelota.get());
+             contacto.tipo != Colision::Nada) {
+    pelota->Colision(contacto);
+  }
 }
 
 void PongRender::DibujarRed() {
