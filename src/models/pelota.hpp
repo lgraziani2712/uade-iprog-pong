@@ -15,6 +15,7 @@ class Pelota {
   void Actualizar(float dt);
   std::array<float, 4> Vertices();
   void Colision(Contacto contacto);
+  void ColisionConPared(int windowWidth, int windowHeight);
   Vec Velocidad();
 
  private:

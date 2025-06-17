@@ -38,4 +38,43 @@ void Pelota::Colision(Contacto contacto) {
   }
 }
 
+void Pelota::ColisionConPared(int windowWidth, int windowHeight) {
+  auto vertices = Pelota::Vertices();
+  Contacto contacto{};
+
+  // Calculo el contacto que tuvo la pelota
+  if (vertices[Lado::Izquierdo] < 0.0f) {
+    contacto.tipo = Colision::Izquierda;
+  } else if (vertices[Lado::Derecho] > windowWidth) {
+    contacto.tipo = Colision::Derecha;
+  } else if (vertices[Lado::Arriba] < 0.0f) {
+    contacto.tipo = Colision::Arriba;
+    contacto.penetracion = -vertices[Lado::Arriba];
+  } else if (vertices[Lado::Abajo] > windowHeight) {
+    contacto.tipo = Colision::Abajo;
+    contacto.penetracion = windowHeight - vertices[Lado::Abajo];
+  }
+
+  // Aplico el contacto, corrijo posición y velocidad
+  switch (contacto.tipo) {
+    case Colision::Arriba:
+    case Colision::Abajo:
+      posicion.y += contacto.penetracion;
+      velocidad.y = -velocidad.y;
+      break;
+    case Colision::Izquierda:
+      posicion.x = windowWidth / 2.0f;
+      posicion.y = windowHeight / 2.0f;
+      velocidad.x = celeridad;
+      velocidad.y = 0.75f * celeridad;
+      break;
+    case Colision::Derecha:
+      posicion.x = windowWidth / 2.0f;
+      posicion.y = windowHeight / 2.0f;
+      velocidad.x = -celeridad;
+      velocidad.y = 0.75f * celeridad;
+      break;
+  }
+}
+
 Vec Pelota::Velocidad() { return velocidad; }

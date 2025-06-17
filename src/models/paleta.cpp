@@ -39,7 +39,7 @@ void Paleta::Actualizar(float dt, int height) {
   }
 }
 
-Contacto Paleta::VerificarColision(Pelota* pelota) {
+void Paleta::Colision(Pelota* pelota) {
   auto verticesPelota = pelota->Vertices();
   float vertices[4] = {posicion.x, posicion.x + PALETA_ANCHO, posicion.y,
                        posicion.y + PALETA_ALTO};
@@ -49,8 +49,9 @@ Contacto Paleta::VerificarColision(Pelota* pelota) {
       (verticesPelota[Lado::Derecho] < vertices[Lado::Izquierdo]) ||
       (verticesPelota[Lado::Arriba] > vertices[Lado::Abajo]) ||
       (verticesPelota[Lado::Abajo] < vertices[Lado::Arriba])) {
-    return contacto;
+    return;
   }
+
   float rangoSuperior = vertices[Lado::Abajo] - (2.0f * PALETA_ALTO / 3.0f);
   float rangoMedio = vertices[Lado::Abajo] - (PALETA_ALTO / 3.0f);
 
@@ -74,5 +75,5 @@ Contacto Paleta::VerificarColision(Pelota* pelota) {
     contacto.tipo = Colision::Abajo;
   }
 
-  return contacto;
+  pelota->Colision(contacto);
 }

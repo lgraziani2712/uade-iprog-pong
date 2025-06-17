@@ -16,7 +16,7 @@ class Paleta {
   void Dibujar(SDL_Renderer* renderer);
   void AplicarVelocidad(bool arriba, bool abajo);
   void Actualizar(float dt, int height);
-  Contacto VerificarColision(Pelota* pelota);
+  void Colision(Pelota* pelota);
 
  private:
   int id;

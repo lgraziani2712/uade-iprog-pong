@@ -48,13 +48,9 @@ void PongRender::Recalcular(double tiempoTotal, double deltaTime) {
   pelota->Actualizar(deltaTime);
 
   // Verifico posible colisión y corrijo debidamente
-  if (Contacto contacto = paleta1->VerificarColision(pelota.get());
-      contacto.tipo != Colision::Nada) {
-    pelota->Colision(contacto);
-  } else if (contacto = paleta2->VerificarColision(pelota.get());
-             contacto.tipo != Colision::Nada) {
-    pelota->Colision(contacto);
-  }
+  paleta1->Colision(pelota.get());
+  paleta2->Colision(pelota.get());
+  pelota->ColisionConPared(width, height);
 }
 
 void PongRender::DibujarRed() {
