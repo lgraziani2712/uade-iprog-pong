@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include <array>
 #include "colision.hpp"
 #include "vec.hpp"
@@ -10,7 +11,7 @@
 
 class Pelota {
  public:
-  Pelota(float x, float y);
+  Pelota(float x, float y, Mix_Chunk* golpePaleta, Mix_Chunk* golpePared);
   void Dibujar(SDL_Renderer* renderer);
   void Actualizar(float dt);
   std::array<float, 4> Vertices();
@@ -23,4 +24,5 @@ class Pelota {
   Vec posicion;
   Vec velocidad;
   SDL_Rect rect{};
+  Mix_Chunk *golpePaleta, *golpePared;
 };

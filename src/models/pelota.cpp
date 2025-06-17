@@ -1,9 +1,12 @@
 #include "pelota.hpp"
 
-Pelota::Pelota(float x, float y)
+Pelota::Pelota(float x, float y, Mix_Chunk* golpePaleta, Mix_Chunk* golpePared)
     // A la posición que recibimos, restamos la mitad del alto y mitad del
     // ancho de la pelota para que ésta esté anclada en su centro
-    : posicion(Vec(x, y)), velocidad(Vec(celeridad, 0.0f)) {
+    : posicion(Vec(x, y)),
+      velocidad(Vec(celeridad, 0.0f)),
+      golpePaleta(golpePaleta),
+      golpePared(golpePared) {
   rect.x = static_cast<int>(posicion.x);
   rect.y = static_cast<int>(posicion.y);
   rect.w = PELOTA_ANCHO;
@@ -25,6 +28,8 @@ std::array<float, 4> Pelota::Vertices() {
 }
 
 void Pelota::Colision(Contacto contacto) {
+  Mix_PlayChannel(-1, golpePaleta, 0);
+
   posicion.x += contacto.penetracion;
   velocidad.x = -velocidad.x;
 
@@ -59,6 +64,8 @@ Contacto Pelota::ColisionConPared(int windowWidth, int windowHeight) {
   switch (contacto.tipo) {
     case Colision::Arriba:
     case Colision::Abajo:
+      Mix_PlayChannel(-1, golpePared, 0);
+
       posicion.y += contacto.penetracion;
       velocidad.y = -velocidad.y;
       break;

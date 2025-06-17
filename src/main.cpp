@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
-#include <filesystem>
 #include <iostream>
 #include <memory>
 #include "clean_up.hpp"
@@ -8,15 +8,6 @@
 #include "creation.hpp"
 #include "game_loop.hpp"
 #include "renders/pong_render.hpp"
-
-std::string getAssetsPath(const std::string& relativePath) {
-  namespace fs = std::filesystem;
-
-  // where the binary runs from
-  auto base = fs::current_path();
-
-  return (base / "src" / "assets" / relativePath).generic_string();
-}
 
 int SDL_main(int argc, char* argv[]) {
   // Inicializa los componentes de SDL
@@ -26,6 +17,10 @@ int SDL_main(int argc, char* argv[]) {
   }
   if (TTF_Init() != 0) {
     SDL_Log("Incapaz de inicializar TTF: %s", TTF_GetError());
+    return 1;
+  }
+  if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) != 0) {
+    SDL_Log("Incapaz de inicializar Mixer: %s", TTF_GetError());
     return 1;
   }
 
@@ -51,6 +46,8 @@ int SDL_main(int argc, char* argv[]) {
       TTF_CloseFont(fuenteDelPuntaje);
     }
 
+    Mix_Quit();
+    TTF_Quit();
     SDL_Quit();
   });
 

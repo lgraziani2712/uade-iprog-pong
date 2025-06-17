@@ -11,7 +11,7 @@
 
 class Paleta {
  public:
-  Paleta(int id, float x, float y);
+  Paleta(float x, float y);
 
   void Dibujar(SDL_Renderer* renderer);
   void AplicarVelocidad(bool arriba, bool abajo);
@@ -19,7 +19,6 @@ class Paleta {
   void Colision(Pelota* pelota);
 
  private:
-  int id;
   float celeridad = 1.0f;
   Vec posicion;
   Vec velocidad;

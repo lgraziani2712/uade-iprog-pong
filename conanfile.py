@@ -6,8 +6,9 @@ class PongRecipe(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
-        self.requires("sdl/2.28.3")
+        self.requires("sdl/2.32.2", override=True)
         self.requires("sdl_ttf/2.24.0")
+        self.requires("sdl_mixer/2.8.0")
 
     def layout(self):
         cmake_layout(self)

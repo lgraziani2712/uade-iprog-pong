@@ -1,18 +1,43 @@
 #include "pong_render.hpp"
+#include "../configs.hpp"
 
 PongRender::PongRender(SDL_Window* window, SDL_Renderer* renderer,
                        TTF_Font* fuenteDelPuntaje)
     : window(window), renderer(renderer), fuenteDelPuntaje(fuenteDelPuntaje) {
   SDL_GetWindowSize(window, &width, &height);
+  paredGolpeSonido = Mix_LoadWAV(getAssetsPath("4359_pong_wall.wav").c_str());
 
-  pelota = std::make_unique<Pelota>(width / 2.0f, height / 2.0f);
-  paleta1 = std::make_unique<Paleta>(1, 50.0f, height / 2.0f);
-  paleta2 = std::make_unique<Paleta>(2, width - 50.0f, height / 2.0f);
+  if (paredGolpeSonido == NULL) {
+    SDL_Log("Incapaz de inicializar Sonido: %s. Path: %s", SDL_GetError(),
+            getAssetsPath("4359_pong_wall.wav").c_str());
+  }
+
+  paletaGolpeSonido =
+      Mix_LoadWAV(getAssetsPath("4360_pong_paddle.wav").c_str());
+
+  if (paredGolpeSonido == NULL) {
+    SDL_Log("Incapaz de inicializar Sonido: %s. Path: %s", SDL_GetError(),
+            getAssetsPath("4360_pong_paddle.wav").c_str());
+  }
+
+  pelota = std::make_unique<Pelota>(width / 2.0f, height / 2.0f,
+                                    paletaGolpeSonido, paredGolpeSonido);
+  paleta1 = std::make_unique<Paleta>(50.0f, height / 2.0f);
+  paleta2 = std::make_unique<Paleta>(width - 50.0f, height / 2.0f);
   puntaje1 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
                                               Vec(width / 4, 20));
   puntaje2 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
                                               Vec(3 * width / 4, 20));
   input = std::make_unique<Input>();
+}
+
+PongRender::~PongRender() {
+  if (paredGolpeSonido != NULL) {
+    Mix_FreeChunk(paredGolpeSonido);
+  }
+  if (paredGolpeSonido != NULL) {
+    Mix_FreeChunk(paredGolpeSonido);
+  }
 }
 
 void PongRender::Dibujar() {
