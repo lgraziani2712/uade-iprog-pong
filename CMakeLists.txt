@@ -21,6 +21,6 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${CMAKE_SOURCE_DIR}/src/assets"
-    "$<TARGET_FILE_DIR:${PROJECT_NAME}>/assets")
+    "$<TARGET_FILE_DIR:${PROJECT_NAME}>/src/assets")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main SDL2::SDL2 SDL2_ttf::SDL2_ttf-static)

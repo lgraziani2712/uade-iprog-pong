@@ -38,7 +38,7 @@ void Pelota::Colision(Contacto contacto) {
   }
 }
 
-void Pelota::ColisionConPared(int windowWidth, int windowHeight) {
+Contacto Pelota::ColisionConPared(int windowWidth, int windowHeight) {
   auto vertices = Pelota::Vertices();
   Contacto contacto{};
 
@@ -75,6 +75,8 @@ void Pelota::ColisionConPared(int windowWidth, int windowHeight) {
       velocidad.y = 0.75f * celeridad;
       break;
   }
+
+  return contacto;
 }
 
 Vec Pelota::Velocidad() { return velocidad; }

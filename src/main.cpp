@@ -15,7 +15,7 @@ std::string getAssetsPath(const std::string& relativePath) {
   // where the binary runs from
   auto base = fs::current_path();
 
-  return (base / "src" / "assets" / relativePath).string();
+  return (base / "src" / "assets" / relativePath).generic_string();
 }
 
 int SDL_main(int argc, char* argv[]) {
@@ -59,6 +59,14 @@ int SDL_main(int argc, char* argv[]) {
   renderer = createRenderer(window);
   fuenteDelPuntaje =
       TTF_OpenFont(getAssetsPath("HurmitNerdFont-Bold.otf").c_str(), 40);
+
+  if (fuenteDelPuntaje == NULL) {
+    SDL_Log("Incapaz de inicializar Fuente: %s. Path: %s", SDL_GetError(),
+            getAssetsPath("HurmitNerdFont-Bold.otf").c_str());
+
+    return 1;
+  }
+
   // Se libera automáticamente al finalizar la función main
   auto gameRender =
       std::make_unique<PongRender>(window, renderer, fuenteDelPuntaje);

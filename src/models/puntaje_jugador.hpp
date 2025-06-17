@@ -10,8 +10,10 @@ class PuntajeJugador {
   ~PuntajeJugador();
 
   void Dibujar();
+  void Aumentar();
 
  private:
+  int puntaje = 0;
   Vec posicion;
   SDL_Renderer* renderer;
   TTF_Font* fuente;
