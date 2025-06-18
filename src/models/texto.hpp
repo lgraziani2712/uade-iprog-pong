@@ -4,16 +4,16 @@
 #include <SDL2/SDL_ttf.h>
 #include "vec.hpp"
 
-class PuntajeJugador {
+class Texto {
  public:
-  PuntajeJugador(SDL_Renderer* renderer, TTF_Font* fuente, Vec posicion);
-  ~PuntajeJugador();
+  Texto(SDL_Renderer* renderer, TTF_Font* fuente, const char* texto,
+        Vec posicion);
+  ~Texto();
 
+  void Actualizar(const char* texto);
   void Dibujar();
-  void Aumentar();
 
  private:
-  int puntaje = 0;
   Vec posicion;
   SDL_Renderer* renderer;
   TTF_Font* fuente;

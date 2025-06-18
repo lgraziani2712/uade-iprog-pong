@@ -41,6 +41,7 @@ void Paleta::Colision(Pelota* pelota) {
   auto verticesPelota = pelota->Vertices();
   float vertices[4] = {posicion.x, posicion.x + PALETA_ANCHO, posicion.y,
                        posicion.y + PALETA_ALTO};
+  // TODO: Usar SDL_IntersectRect
   Contacto contacto{};
 
   if ((verticesPelota[Lado::Izquierdo] > vertices[Lado::Derecho]) ||

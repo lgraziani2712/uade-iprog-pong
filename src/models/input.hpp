@@ -2,12 +2,7 @@
 
 #include <SDL2/SDL.h>
 
-enum Botones {
-  PaletaUnoArriba = 0,
-  PaletaUnoAbajo,
-  PaletaDosArriba,
-  PaletaDosAbajo,
-};
+enum Teclas { w = 0, s, ARRIBA, ABAJO, ENTER, ESC };
 
 class Input {
  public:
@@ -15,10 +10,9 @@ class Input {
   // Mapea todos los inputs de teclado a los comandos que maneja el juego.
   // Esto corre en cada frame.
   void Actualizar();
-  bool Corriendo();
-  bool Boton(int nombre);
+  bool Tecla(int nombre);
+  void Reiniciar();
 
  private:
-  bool botones[4] = {false, false, false, false};
-  bool ejecutando = true;
+  bool teclas[6] = {false, false, false, false, false, false};
 };

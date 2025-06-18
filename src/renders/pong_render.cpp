@@ -56,16 +56,25 @@ void PongRender::Dibujar() {
   puntaje2->Dibujar();
 }
 
-bool PongRender::Corriendo() { return input->Corriendo(); }
+void PongRender::Continuar() {
+  ejecutando = true;
+  input->Reiniciar();
+}
 
-void PongRender::ActualizarInputs() { input->Actualizar(); }
+bool PongRender::Corriendo() { return ejecutando; }
+
+void PongRender::ActualizarInputs() {
+  input->Actualizar();
+  if (input->Tecla(Teclas::ESC)) {
+    ejecutando = false;
+  }
+}
 
 void PongRender::Recalcular(double tiempoTotal, double deltaTime) {
   // Aplico velocidad de movimiento en paletas
-  paleta1->AplicarVelocidad(input->Boton(Botones::PaletaUnoArriba),
-                            input->Boton(Botones::PaletaUnoAbajo));
-  paleta2->AplicarVelocidad(input->Boton(Botones::PaletaDosArriba),
-                            input->Boton(Botones::PaletaDosAbajo));
+  paleta1->AplicarVelocidad(input->Tecla(Teclas::w), input->Tecla(Teclas::s));
+  paleta2->AplicarVelocidad(input->Tecla(Teclas::ARRIBA),
+                            input->Tecla(Teclas::ABAJO));
 
   // Actualizo la posición de cada objeto
   paleta1->Actualizar(deltaTime, height);

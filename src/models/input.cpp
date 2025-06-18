@@ -9,37 +9,46 @@ void Input::Actualizar() {
     switch (event.type) {
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
+          case SDLK_RETURN:
+            teclas[Teclas::ENTER] = true;
+            break;
           case SDLK_ESCAPE:
-            ejecutando = false;
+            teclas[Teclas::ESC] = true;
             break;
           case SDLK_w:
-            botones[Botones::PaletaUnoArriba] = true;
+            teclas[Teclas::w] = true;
             break;
           case SDLK_s:
-            botones[Botones::PaletaUnoAbajo] = true;
+            teclas[Teclas::s] = true;
             break;
           case SDLK_UP:
-            botones[Botones::PaletaDosArriba] = true;
+            teclas[Teclas::ARRIBA] = true;
             break;
           case SDLK_DOWN:
-            botones[Botones::PaletaDosAbajo] = true;
+            teclas[Teclas::ABAJO] = true;
             break;
         }
         break;
 
       case SDL_KEYUP:
         switch (event.key.keysym.sym) {
+          case SDLK_RETURN:
+            teclas[Teclas::ENTER] = false;
+            break;
+          case SDLK_ESCAPE:
+            teclas[Teclas::ESC] = false;
+            break;
           case SDLK_w:
-            botones[Botones::PaletaUnoArriba] = false;
+            teclas[Teclas::w] = false;
             break;
           case SDLK_s:
-            botones[Botones::PaletaUnoAbajo] = false;
+            teclas[Teclas::s] = false;
             break;
           case SDLK_UP:
-            botones[Botones::PaletaDosArriba] = false;
+            teclas[Teclas::ARRIBA] = false;
             break;
           case SDLK_DOWN:
-            botones[Botones::PaletaDosAbajo] = false;
+            teclas[Teclas::ABAJO] = false;
             break;
         }
         break;
@@ -47,6 +56,10 @@ void Input::Actualizar() {
   }
 }
 
-bool Input::Corriendo() { return ejecutando; }
+bool Input::Tecla(int nombre) { return teclas[nombre]; }
 
-bool Input::Boton(int nombre) { return botones[nombre]; }
+void Input::Reiniciar() {
+  for (int i = 0; i < 6; i++) {
+    teclas[i] = false;
+  }
+}

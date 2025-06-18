@@ -7,9 +7,7 @@ SDL_Window* createWindow() {
       "Pong lgraziani", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
-  if (!window) {
-    SDL_Log("Failed to create window: %s", SDL_GetError());
-
+  if (window == NULL) {
     throw std::runtime_error(SDL_GetError());
   }
 
@@ -20,9 +18,7 @@ SDL_Renderer* createRenderer(SDL_Window* window) {
   SDL_Renderer* renderer =
       SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-  if (!renderer) {
-    SDL_Log("Failed to create renderer: %s", SDL_GetError());
-
+  if (renderer == NULL) {
     throw std::runtime_error(SDL_GetError());
   }
 
