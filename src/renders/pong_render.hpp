@@ -18,7 +18,7 @@ class PongRender {
   void ActualizarInputs();
   void Recalcular(double tiempoTotal, double deltaTime);
   void Dibujar();
-  void Continuar();
+  void Reiniciar();
 
  private:
   bool ejecutando = false;

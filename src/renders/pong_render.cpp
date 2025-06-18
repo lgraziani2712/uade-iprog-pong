@@ -56,15 +56,24 @@ void PongRender::Dibujar() {
   puntaje2->Dibujar();
 }
 
-void PongRender::Continuar() {
+void PongRender::Reiniciar() {
   ejecutando = true;
+
   input->Reiniciar();
+  pelota->Reiniciar(width / 2.0f, height / 2.0f);
+
+  paleta1->Reiniciar(50.0f, height / 2.0f);
+  paleta2->Reiniciar(width - 50.0f, height / 2.0f);
+
+  puntaje1->Reiniciar();
+  puntaje2->Reiniciar();
 }
 
 bool PongRender::Corriendo() { return ejecutando; }
 
 void PongRender::ActualizarInputs() {
   input->Actualizar();
+
   if (input->Tecla(Teclas::ESC)) {
     ejecutando = false;
   }

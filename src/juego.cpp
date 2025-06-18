@@ -31,6 +31,7 @@ Juego::~Juego() {
     TTF_CloseFont(fuente);
   }
 }
+// Inicializa el loop inicial del juego
 void Juego::Init() {
   while (estado != JuegoEstado::EXIT) {
     switch (estado) {
@@ -46,8 +47,8 @@ void Juego::Init() {
       case JuegoEstado::FINALIZADO:
         Finalizado();
         break;
-      case JuegoEstado::LISTADO:
-        Listado();
+      case JuegoEstado::RANKING:
+        Ranking();
         break;
     }
   }
@@ -65,7 +66,7 @@ void Juego::Menu() {
   int posicion = 0;
   std::array<const char *, 3> textosNoSeleccionados = {"Jugar", "Ranking",
                                                        "Salir"};
-  std::array<const char *, 3> textosSeleccionados = {"JUGAR", "LISTADO",
+  std::array<const char *, 3> textosSeleccionados = {"JUGAR", "RANKING",
                                                      "SALIR"};
 
   std::array<Texto, 3> textos = {
@@ -108,7 +109,7 @@ void Juego::Menu() {
               estado = JuegoEstado::PLAY;
               break;
             case 1:
-              estado = JuegoEstado::LISTADO;
+              estado = JuegoEstado::RANKING;
               break;
             case 2:
               estado = JuegoEstado::EXIT;
@@ -126,8 +127,8 @@ void Juego::Menu() {
     for (int i = 0; i < textos.size(); i++) {
       textos[i].Dibujar();
     }
-
     SDL_RenderPresent(renderer);
+
     // En el menú no vale la pena preocuparse por los fps. De hecho se optimiza
     // para menos de 60fps.
     SDL_Delay(41);
@@ -135,7 +136,7 @@ void Juego::Menu() {
 };
 
 void Juego::Play() {
-  render->Continuar();
+  render->Reiniciar();
 
   // Inicializo el game loop y paso el puntero a la instancia que renderiza el
   // juego que quiero correr. No muevo el unique_ptr, ya que éste es
@@ -144,6 +145,45 @@ void Juego::Play() {
 
   estado = JuegoEstado::PAUSA;
 }
-void Juego::Pausa() { estado = JuegoEstado::MENU; };
-void Juego::Finalizado() { estado = JuegoEstado::EXIT; };
-void Juego::Listado() { estado = JuegoEstado::EXIT; };
+void Juego::Pausa() {
+  SDL_Event event;
+
+  auto texto1 = Texto(renderer, fuente, "Apreta ENTER para continuar",
+                      Vec(width / 2, (height / 2) - 30));
+  auto texto2 = Texto(renderer, fuente, "o ESC para terminar la partida",
+                      Vec(width / 2, (height / 2) + 30));
+
+  while (estado == JuegoEstado::PAUSA) {
+    while (SDL_PollEvent(&event)) {
+      // conditional continue
+      if (event.type != SDL_KEYUP) {
+        continue;
+      }
+      switch (event.key.keysym.sym) {
+        case SDLK_ESCAPE:
+          estado = JuegoEstado::MENU;
+          return;
+        case SDLK_UP:
+          break;
+        case SDLK_DOWN:
+          break;
+        case SDLK_RETURN:
+          estado = JuegoEstado::PLAY;
+          // Early return para este caso. Evitamos renderizar la vista de menú
+          // para inmediatamente transicionar a la siguiente vista.
+          return;
+      }
+    }
+
+    texto1.Dibujar();
+    texto2.Dibujar();
+
+    SDL_RenderPresent(renderer);
+
+    // Al pausar, tampoco no vale la pena preocuparse por los fps. De hecho se
+    // optimiza para menos de 60fps.
+    SDL_Delay(41);
+  }
+};
+void Juego::Finalizado() { estado = JuegoEstado::MENU; };
+void Juego::Ranking() { estado = JuegoEstado::MENU; };

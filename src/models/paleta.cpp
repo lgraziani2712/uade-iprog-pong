@@ -4,7 +4,6 @@
 Paleta::Paleta(float x, float y)
     : posicion(Vec(x, y - PALETA_ALTO / 2.0f)), velocidad(Vec(0.0f, 0.0f)) {
   rect.x = static_cast<int>(posicion.x);
-  rect.y = static_cast<int>(posicion.y);
   rect.w = PALETA_ANCHO;
   rect.h = PALETA_ALTO;
 }
@@ -35,6 +34,11 @@ void Paleta::Actualizar(float dt, int height) {
     // Limita al borde inferior
     posicion.y = height - PALETA_ALTO;
   }
+}
+
+void Paleta::Reiniciar(float x, float y) {
+  velocidad = Vec(0.0f, 0.0f);
+  posicion = Vec(x, y - PALETA_ALTO / 2.0f);
 }
 
 void Paleta::Colision(Pelota* pelota) {

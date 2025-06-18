@@ -6,7 +6,7 @@
 #include "models/input.hpp"
 #include "renders/pong_render.hpp"
 
-const enum JuegoEstado { MENU, PLAY, PAUSA, FINALIZADO, LISTADO, EXIT };
+const enum JuegoEstado { MENU, PLAY, PAUSA, FINALIZADO, RANKING, EXIT };
 
 class Juego {
  public:
@@ -30,5 +30,5 @@ class Juego {
   void Play();
   void Pausa();
   void Finalizado();
-  void Listado();
+  void Ranking();
 };

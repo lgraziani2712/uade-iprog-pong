@@ -17,6 +17,7 @@ class Paleta {
   void AplicarVelocidad(bool arriba, bool abajo);
   void Actualizar(float dt, int height);
   void Colision(Pelota* pelota);
+  void Reiniciar(float x, float y);
 
  private:
   float celeridad = 1.0f;

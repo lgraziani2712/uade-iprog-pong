@@ -34,6 +34,26 @@ void PuntajeJugador::Dibujar() {
   }
 }
 
+void PuntajeJugador::Reiniciar() {
+  puntaje = 0;
+
+  SDL_FreeSurface(surface);
+  SDL_DestroyTexture(texture);
+
+  surface = TTF_RenderText_Solid(fuente, std::to_string(puntaje).c_str(),
+                                 {0xFF, 0xFF, 0xFF, 0xFF});
+  texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+  int width, height;
+
+  if (SDL_QueryTexture(texture, nullptr, nullptr, &width, &height) != 0) {
+    SDL_Log(SDL_GetError());
+  }
+
+  rect.w = width;
+  rect.h = height;
+}
+
 void PuntajeJugador::Aumentar() {
   puntaje++;
 

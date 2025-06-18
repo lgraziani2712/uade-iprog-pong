@@ -7,8 +7,6 @@ Pelota::Pelota(float x, float y, Mix_Chunk* golpePaleta, Mix_Chunk* golpePared)
       velocidad(Vec(celeridad, 0.0f)),
       golpePaleta(golpePaleta),
       golpePared(golpePared) {
-  rect.x = static_cast<int>(posicion.x);
-  rect.y = static_cast<int>(posicion.y);
   rect.w = PELOTA_ANCHO;
   rect.h = PELOTA_ALTO;
 }
@@ -41,6 +39,11 @@ void Pelota::Colision(Contacto contacto) {
       velocidad.y = 0.75f * celeridad;
       break;
   }
+}
+
+void Pelota::Reiniciar(float x, float y) {
+  velocidad = Vec(celeridad, 0.0f);
+  posicion = Vec(x, y);
 }
 
 Contacto Pelota::ColisionConPared(int windowWidth, int windowHeight) {

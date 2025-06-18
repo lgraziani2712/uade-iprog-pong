@@ -9,12 +9,6 @@ void Input::Actualizar() {
     switch (event.type) {
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
-          case SDLK_RETURN:
-            teclas[Teclas::ENTER] = true;
-            break;
-          case SDLK_ESCAPE:
-            teclas[Teclas::ESC] = true;
-            break;
           case SDLK_w:
             teclas[Teclas::w] = true;
             break;
@@ -33,10 +27,10 @@ void Input::Actualizar() {
       case SDL_KEYUP:
         switch (event.key.keysym.sym) {
           case SDLK_RETURN:
-            teclas[Teclas::ENTER] = false;
+            teclas[Teclas::ENTER] = true;
             break;
           case SDLK_ESCAPE:
-            teclas[Teclas::ESC] = false;
+            teclas[Teclas::ESC] = true;
             break;
           case SDLK_w:
             teclas[Teclas::w] = false;
