@@ -9,6 +9,7 @@
 #include "../models/paleta.hpp"
 #include "../models/pelota.hpp"
 #include "../models/puntaje_jugador.hpp"
+#include "../models/texto.hpp"
 
 const enum PongEstado { INICIAR, PAUSAR, FIN };
 
@@ -30,7 +31,7 @@ class PongRender {
  private:
   const uint64_t TIEMPO_MAXIMO = 120000;
   const int PUNTAJE_MAXIMO = 7;
-  uint64_t tiempoInicio;
+  uint64_t tiempoInicio = 0;
   uint64_t tiempoEnPausa = 0;
   PongEstado estado = PongEstado::FIN;
   Resultado resultado;
@@ -52,6 +53,7 @@ class PongRender {
   std::unique_ptr<PuntajeJugador> puntaje1;
   std::unique_ptr<PuntajeJugador> puntaje2;
   std::unique_ptr<Input> input;
+  std::unique_ptr<Texto> contador;
 
   void DibujarRed();
   void VerificarFin();

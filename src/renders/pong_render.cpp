@@ -1,4 +1,5 @@
 #include "pong_render.hpp"
+#include <format>
 #include "../configs.hpp"
 
 PongRender::PongRender(SDL_Window* window, SDL_Renderer* renderer,
@@ -29,6 +30,8 @@ PongRender::PongRender(SDL_Window* window, SDL_Renderer* renderer,
   puntaje2 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
                                               Vec(3 * width / 4, 20));
   input = std::make_unique<Input>();
+  contador = std::make_unique<Texto>(renderer, fuenteDelPuntaje, "0.00s",
+                                     Alineacion::Centro, Vec((width / 2), 40));
 }
 
 PongRender::~PongRender() {
@@ -57,12 +60,14 @@ void PongRender::Dibujar() {
 
   puntaje1->Dibujar();
   puntaje2->Dibujar();
+  contador->Dibujar();
 }
 
 void PongRender::Iniciar() {
   estado = PongEstado::INICIAR;
   tiempoInicio = SDL_GetTicks64();
   tiempoEnPausa = 0;
+  contador->Actualizar("0.00s");
 
   input->Reiniciar();
   pelota->Reiniciar(width / 2.0f, height / 2.0f);
@@ -114,6 +119,11 @@ void PongRender::Recalcular(double tiempoTotal, double deltaTime) {
   // Verifico posible colisión y corrijo debidamente
   paleta1->Colision(pelota.get());
   paleta2->Colision(pelota.get());
+
+  contador->Actualizar(
+      std::format("{:.2f}s",
+                  (double)(SDL_GetTicks64() - tiempoInicio) / (double)1000.0)
+          .c_str());
 
   Contacto contacto = pelota->ColisionConPared(width, height);
 
