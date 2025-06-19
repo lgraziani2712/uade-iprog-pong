@@ -12,6 +12,7 @@ class PuntajeJugador {
   void Dibujar();
   void Aumentar();
   void Reiniciar();
+  int Puntaje();
 
  private:
   int puntaje = 0;

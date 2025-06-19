@@ -49,15 +49,20 @@ void PongRender::Dibujar() {
 
   // Dibujo los objetos
   DibujarRed();
+
   pelota->Dibujar(renderer);
+
   paleta1->Dibujar(renderer);
   paleta2->Dibujar(renderer);
+
   puntaje1->Dibujar();
   puntaje2->Dibujar();
 }
 
-void PongRender::Reiniciar() {
-  ejecutando = true;
+void PongRender::Iniciar() {
+  estado = PongEstado::INICIAR;
+  tiempoInicio = SDL_GetTicks64();
+  tiempoEnPausa = 0;
 
   input->Reiniciar();
   pelota->Reiniciar(width / 2.0f, height / 2.0f);
@@ -69,13 +74,29 @@ void PongRender::Reiniciar() {
   puntaje2->Reiniciar();
 }
 
-bool PongRender::Corriendo() { return ejecutando; }
+void PongRender::Pausar(bool pausar) {
+  if (pausar) {
+    estado = PongEstado::PAUSAR;
+    tiempoEnPausa = SDL_GetTicks64();
+  } else {
+    estado = PongEstado::INICIAR;
+    input->Reiniciar();
+
+    // Adelanto N ms según el tiempo en pausa para que no siga sumando segundos
+    tiempoInicio += SDL_GetTicks64() - tiempoEnPausa;
+    tiempoEnPausa = 0;
+  }
+}
+
+Resultado PongRender::ResultadoUltimaPartida() { return resultado; }
+
+bool PongRender::Corriendo() { return estado == PongEstado::INICIAR; }
 
 void PongRender::ActualizarInputs() {
   input->Actualizar();
 
   if (input->Tecla(Teclas::ESC)) {
-    ejecutando = false;
+    Pausar(true);
   }
 }
 
@@ -104,6 +125,9 @@ void PongRender::Recalcular(double tiempoTotal, double deltaTime) {
       puntaje2->Aumentar();
       break;
   }
+
+  // Al final del recálculo, verifica si terminó
+  VerificarFin();
 }
 
 void PongRender::DibujarRed() {
@@ -114,5 +138,34 @@ void PongRender::DibujarRed() {
   for (int y = 0; y < height; y += 5) {
     // Dibuja líneas de [0,3], [5,8]. Siempre con un píxel vacío.
     SDL_RenderDrawLine(renderer, width / 2, y, width / 2, y + 3);
+  }
+}
+
+void PongRender::FinalizarPartida(bool porCancelado) {
+  uint64_t enPausa = tiempoEnPausa > 0 ? SDL_GetTicks64() - tiempoEnPausa : 0;
+
+  estado = PongEstado::FIN;
+  resultado = Resultado{};
+
+  resultado.tiempo =
+      (double)(SDL_GetTicks64() - (tiempoInicio + enPausa)) / (double)1000.0;
+  resultado.jugador1 = puntaje1->Puntaje();
+  resultado.jugador2 = puntaje2->Puntaje();
+
+  resultado.victoria =
+      porCancelado                              ? Victoria::QUIT
+      : resultado.jugador1 > resultado.jugador2 ? Victoria::JUGADOR_1
+      : resultado.jugador2 > resultado.jugador1 ? Victoria::JUGADOR_2
+                                                : Victoria::Empate;
+}
+
+PongEstado PongRender::Estado() { return estado; }
+
+// Reglas de la partida
+void PongRender::VerificarFin() {
+  if (puntaje1->Puntaje() == PUNTAJE_MAXIMO ||
+      puntaje2->Puntaje() == PUNTAJE_MAXIMO ||
+      ((SDL_GetTicks64() - tiempoInicio) >= TIEMPO_MAXIMO)) {
+    FinalizarPartida(false);
   }
 }

@@ -54,6 +54,8 @@ void PuntajeJugador::Reiniciar() {
   rect.h = height;
 }
 
+int PuntajeJugador::Puntaje() { return puntaje; }
+
 void PuntajeJugador::Aumentar() {
   puntaje++;
 

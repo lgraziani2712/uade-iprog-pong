@@ -106,6 +106,7 @@ void Juego::Menu() {
         case SDLK_RETURN:
           switch (posicion) {
             case 0:
+              render->Iniciar();
               estado = JuegoEstado::PLAY;
               break;
             case 1:
@@ -127,8 +128,8 @@ void Juego::Menu() {
     for (int i = 0; i < textos.size(); i++) {
       textos[i].Dibujar();
     }
-    SDL_RenderPresent(renderer);
 
+    SDL_RenderPresent(renderer);
     // En el menú no vale la pena preocuparse por los fps. De hecho se optimiza
     // para menos de 60fps.
     SDL_Delay(41);
@@ -136,14 +137,20 @@ void Juego::Menu() {
 };
 
 void Juego::Play() {
-  render->Reiniciar();
-
   // Inicializo el game loop y paso el puntero a la instancia que renderiza el
   // juego que quiero correr. No muevo el unique_ptr, ya que éste es
   // el owner y es donde se declaran todos los recursos.
   gameLoop(window, renderer, render.get());
 
-  estado = JuegoEstado::PAUSA;
+  switch (render->Estado()) {
+    case PongEstado::PAUSAR:
+      estado = JuegoEstado::PAUSA;
+      break;
+
+    case PongEstado::FIN:
+      estado = JuegoEstado::FINALIZADO;
+      break;
+  }
 }
 void Juego::Pausa() {
   SDL_Event event;
@@ -161,13 +168,15 @@ void Juego::Pausa() {
       }
       switch (event.key.keysym.sym) {
         case SDLK_ESCAPE:
-          estado = JuegoEstado::MENU;
+          render->FinalizarPartida(true);
+          estado = JuegoEstado::FINALIZADO;
           return;
         case SDLK_UP:
           break;
         case SDLK_DOWN:
           break;
         case SDLK_RETURN:
+          render->Pausar(false);
           estado = JuegoEstado::PLAY;
           // Early return para este caso. Evitamos renderizar la vista de menú
           // para inmediatamente transicionar a la siguiente vista.
@@ -179,11 +188,55 @@ void Juego::Pausa() {
     texto2.Dibujar();
 
     SDL_RenderPresent(renderer);
-
     // Al pausar, tampoco no vale la pena preocuparse por los fps. De hecho se
     // optimiza para menos de 60fps.
     SDL_Delay(41);
   }
 };
-void Juego::Finalizado() { estado = JuegoEstado::MENU; };
+
+void Juego::Finalizado() {
+  SDL_Event event;
+  Resultado resultado = render->ResultadoUltimaPartida();
+  auto titulo = Texto(renderer, fuente, "Apreta ENTER para continuar",
+                      Vec(width / 2, (height / 2) - 30));
+
+  // TODO: guardar datos en .csv
+
+  if (resultado.victoria == Victoria::QUIT) {
+    estado = JuegoEstado::MENU;
+
+    // Early return porque no queremos mostrar la pantalla de finalizado cuando
+    // se canceló, pero sí queremos los datos para guardar
+    return;
+  }
+
+  while (estado == JuegoEstado::FINALIZADO) {
+    while (SDL_PollEvent(&event)) {
+      // conditional continue
+      if (event.type != SDL_KEYUP) {
+        continue;
+      }
+      switch (event.key.keysym.sym) {
+        case SDLK_ESCAPE:
+        case SDLK_RETURN:
+          estado = JuegoEstado::MENU;
+          // Early return para este caso. Evitamos renderizar la vista de menú
+          // para inmediatamente transicionar a la siguiente vista.
+          return;
+      }
+    }
+    // Limpia la pantalla en negro
+    SDL_SetRenderDrawColor(renderer, 0x0, 0x0, 0x0, 0xFF);
+    SDL_RenderClear(renderer);
+
+    // Renderizar vista
+    titulo.Dibujar();
+
+    SDL_RenderPresent(renderer);
+    // Al pausar, tampoco vale la pena preocuparse por los fps. De hecho se
+    // optimiza para menos de 60fps.
+    SDL_Delay(41);
+  }
+};
+
 void Juego::Ranking() { estado = JuegoEstado::MENU; };

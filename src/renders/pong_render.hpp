@@ -4,10 +4,13 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 #include <memory>
+#include "../models/estado_pong.hpp"
 #include "../models/input.hpp"
 #include "../models/paleta.hpp"
 #include "../models/pelota.hpp"
 #include "../models/puntaje_jugador.hpp"
+
+const enum PongEstado { INICIAR, PAUSAR, FIN };
 
 class PongRender {
  public:
@@ -18,10 +21,20 @@ class PongRender {
   void ActualizarInputs();
   void Recalcular(double tiempoTotal, double deltaTime);
   void Dibujar();
-  void Reiniciar();
+  void Iniciar();
+  Resultado ResultadoUltimaPartida();
+  void FinalizarPartida(bool porCancelado);
+  PongEstado Estado();
+  void Pausar(bool pausar);
 
  private:
-  bool ejecutando = false;
+  const uint64_t TIEMPO_MAXIMO = 120000;
+  const int PUNTAJE_MAXIMO = 7;
+  uint64_t tiempoInicio;
+  uint64_t tiempoEnPausa = 0;
+  PongEstado estado = PongEstado::FIN;
+  Resultado resultado;
+
   SDL_Window* window;
   SDL_Renderer* renderer;
   TTF_Font* fuenteDelPuntaje;
@@ -41,4 +54,5 @@ class PongRender {
   std::unique_ptr<Input> input;
 
   void DibujarRed();
+  void VerificarFin();
 };
