@@ -4,10 +4,12 @@
 #include <SDL2/SDL_ttf.h>
 #include "vec.hpp"
 
+enum Alineacion { Izq, Dcha, Centro };
+
 class Texto {
  public:
   Texto(SDL_Renderer* renderer, TTF_Font* fuente, const char* texto,
-        Vec posicion);
+        Alineacion alineacion, Vec posicion);
   ~Texto();
 
   void Actualizar(const char* texto);

@@ -1,11 +1,13 @@
 #include "juego.hpp"
 #include <array>
+#include <format>
 #include <memory>
 #include "configs.hpp"
 #include "creation.hpp"
 #include "game_loop.hpp"
 #include "models/texto.hpp"
 #include "renders/pong_render.hpp"
+#include "resultado_csv.hpp"
 
 Juego::Juego() {
   window = createWindow();
@@ -70,11 +72,11 @@ void Juego::Menu() {
                                                      "SALIR"};
 
   std::array<Texto, 3> textos = {
-      Texto(renderer, fuente, textosSeleccionados[0],
+      Texto(renderer, fuente, textosSeleccionados[0], Alineacion::Centro,
             Vec(width / 2, (height / 2) - 100)),
-      Texto(renderer, fuente, textosNoSeleccionados[1],
+      Texto(renderer, fuente, textosNoSeleccionados[1], Alineacion::Centro,
             Vec(width / 2, height / 2)),
-      Texto(renderer, fuente, textosNoSeleccionados[2],
+      Texto(renderer, fuente, textosNoSeleccionados[2], Alineacion::Centro,
             Vec(width / 2, (height / 2) + 100))};
 
   while (estado == JuegoEstado::MENU) {
@@ -156,9 +158,9 @@ void Juego::Pausa() {
   SDL_Event event;
 
   auto texto1 = Texto(renderer, fuente, "Apreta ENTER para continuar",
-                      Vec(width / 2, (height / 2) - 30));
+                      Alineacion::Centro, Vec(width / 2, (height / 2) - 30));
   auto texto2 = Texto(renderer, fuente, "o ESC para terminar la partida",
-                      Vec(width / 2, (height / 2) + 30));
+                      Alineacion::Centro, Vec(width / 2, (height / 2) + 30));
 
   while (estado == JuegoEstado::PAUSA) {
     while (SDL_PollEvent(&event)) {
@@ -195,20 +197,47 @@ void Juego::Pausa() {
 };
 
 void Juego::Finalizado() {
-  SDL_Event event;
   Resultado resultado = render->ResultadoUltimaPartida();
-  auto titulo = Texto(renderer, fuente, "Apreta ENTER para continuar",
-                      Vec(width / 2, (height / 2) - 30));
 
-  // TODO: guardar datos en .csv
+  // Escribo resultado en archivo, siempre.
+  escribir(resultado);
 
-  if (resultado.victoria == Victoria::QUIT) {
+  if (resultado.estado == PartidaEstado::QUIT) {
     estado = JuegoEstado::MENU;
 
     // Early return porque no queremos mostrar la pantalla de finalizado cuando
     // se canceló, pero sí queremos los datos para guardar
     return;
   }
+  SDL_Event event;
+
+  auto titulo =
+      Texto(renderer, fuente, "Apreta ENTER o ESC para volver al menu.",
+            Alineacion::Centro, Vec(width / 2, (height / 3) - 40));
+  auto resultadoTexto = Texto(
+      renderer, fuente,
+      ("- Resultado:  " +
+       (std::string)(resultado.estado == PartidaEstado::QUIT     ? "Cancelada"
+                     : resultado.estado == PartidaEstado::Empate ? "Empate"
+                     : resultado.estado == PartidaEstado::JUGADOR_1
+                         ? "Victoria P1"
+                         : "Victoria P2") +
+       ".")
+          .c_str(),
+      Alineacion::Izq, Vec(width / 4, (height / 3) + 100));
+  auto puntosP1 = Texto(
+      renderer, fuente,
+      ("- Puntaje P1: " + std::to_string(resultado.jugador1) + ".").c_str(),
+      Alineacion::Izq, Vec(width / 4, ((height / 3) + 100) + 40));
+  auto puntosP2 = Texto(
+      renderer, fuente,
+      ("- Puntaje P2: " + std::to_string(resultado.jugador2) + ".").c_str(),
+      Alineacion::Izq, Vec(width / 4, ((height / 3) + 100) + 80));
+  auto tiempoTexto = Texto(
+      renderer, fuente,
+      ("- Tiempo:     " + std::format("{:.2f}", resultado.tiempo) + "seg.")
+          .c_str(),
+      Alineacion::Izq, Vec(width / 4, ((height / 3) + 100) + 120));
 
   while (estado == JuegoEstado::FINALIZADO) {
     while (SDL_PollEvent(&event)) {
@@ -231,6 +260,10 @@ void Juego::Finalizado() {
 
     // Renderizar vista
     titulo.Dibujar();
+    resultadoTexto.Dibujar();
+    puntosP1.Dibujar();
+    puntosP2.Dibujar();
+    tiempoTexto.Dibujar();
 
     SDL_RenderPresent(renderer);
     // Al pausar, tampoco vale la pena preocuparse por los fps. De hecho se
@@ -239,4 +272,74 @@ void Juego::Finalizado() {
   }
 };
 
-void Juego::Ranking() { estado = JuegoEstado::MENU; };
+void Juego::Ranking() {
+  SDL_Event event;
+  auto resultados = leer();
+  auto titulo =
+      Texto(renderer, fuente,
+            "| Resultado   | Jugador1    | Jugador2    | Tiempo      |",
+            Alineacion::Izq, Vec(50, 50));
+  auto subtitulo =
+      Texto(renderer, fuente,
+            "|=============|=============|=============|=============|",
+            Alineacion::Izq, Vec(50, 87));
+  std::vector<std::unique_ptr<Texto>> textos;
+
+  for (int i = 0; i < resultados.size(); i++) {
+    auto resultado = resultados[i];
+    std::string estado = resultado.estado == PartidaEstado::QUIT ? "Cancelada"
+                         : resultado.estado == PartidaEstado::Empate ? "Empate"
+                         : resultado.estado == PartidaEstado::JUGADOR_1
+                             ? "Victoria P1"
+                             : "Victoria P2";
+    auto resP1 = std::to_string(resultado.jugador1);
+    auto resP2 = std::to_string(resultado.jugador2);
+    auto tiempo = std::format("{:.2f}", resultado.tiempo);
+
+    if (estado.size() < 11) {
+      estado.append(11 - estado.size(), ' ');
+    }
+    resP1.append(11 - resP1.size(), ' ');
+    resP2.append(11 - resP2.size(), ' ');
+    tiempo.append(11 - tiempo.size(), ' ');
+
+    textos.push_back(std::make_unique<Texto>(
+        renderer, fuente,
+        ("| " + estado + " | " + resP1 + " | " + resP2 + " | " + tiempo + " |")
+            .c_str(),
+        Alineacion::Izq, Vec(50, 124 + i * 37)));
+  }
+
+  while (estado == JuegoEstado::RANKING) {
+    while (SDL_PollEvent(&event)) {
+      // conditional continue
+      if (event.type != SDL_KEYUP) {
+        continue;
+      }
+      switch (event.key.keysym.sym) {
+        case SDLK_ESCAPE:
+        case SDLK_RETURN:
+          estado = JuegoEstado::MENU;
+          // Early return para este caso. Evitamos renderizar la vista de menú
+          // para inmediatamente transicionar a la siguiente vista.
+          return;
+      }
+    }
+    // Limpia la pantalla en negro
+    SDL_SetRenderDrawColor(renderer, 0x0, 0x0, 0x0, 0xFF);
+    SDL_RenderClear(renderer);
+
+    // Renderizar vista
+    titulo.Dibujar();
+    subtitulo.Dibujar();
+
+    for (int i = 0; i < textos.size(); i++) {
+      textos[i]->Dibujar();
+    }
+
+    SDL_RenderPresent(renderer);
+    // Al pausar, tampoco vale la pena preocuparse por los fps. De hecho se
+    // optimiza para menos de 60fps.
+    SDL_Delay(41);
+  }
+};

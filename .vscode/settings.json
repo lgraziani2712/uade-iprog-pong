@@ -79,6 +79,8 @@
     "array": "cpp",
     "thread": "cpp",
     "stop_token": "cpp",
-    "*.tpp": "cpp"
-  }
+    "*.tpp": "cpp",
+    "fstream": "cpp"
+  },
+  "editor.renderFinalNewline": "on"
 }

@@ -119,10 +119,10 @@ void PongRender::Recalcular(double tiempoTotal, double deltaTime) {
 
   switch (contacto.tipo) {
     case Colision::Izquierda:
-      puntaje1->Aumentar();
+      puntaje2->Aumentar();
       break;
     case Colision::Derecha:
-      puntaje2->Aumentar();
+      puntaje1->Aumentar();
       break;
   }
 
@@ -145,18 +145,18 @@ void PongRender::FinalizarPartida(bool porCancelado) {
   uint64_t enPausa = tiempoEnPausa > 0 ? SDL_GetTicks64() - tiempoEnPausa : 0;
 
   estado = PongEstado::FIN;
-  resultado = Resultado{};
+  resultado = Resultado();
 
   resultado.tiempo =
       (double)(SDL_GetTicks64() - (tiempoInicio + enPausa)) / (double)1000.0;
   resultado.jugador1 = puntaje1->Puntaje();
   resultado.jugador2 = puntaje2->Puntaje();
 
-  resultado.victoria =
-      porCancelado                              ? Victoria::QUIT
-      : resultado.jugador1 > resultado.jugador2 ? Victoria::JUGADOR_1
-      : resultado.jugador2 > resultado.jugador1 ? Victoria::JUGADOR_2
-                                                : Victoria::Empate;
+  resultado.estado =
+      porCancelado                              ? PartidaEstado::QUIT
+      : resultado.jugador1 > resultado.jugador2 ? PartidaEstado::JUGADOR_1
+      : resultado.jugador2 > resultado.jugador1 ? PartidaEstado::JUGADOR_2
+                                                : PartidaEstado::Empate;
 }
 
 PongEstado PongRender::Estado() { return estado; }

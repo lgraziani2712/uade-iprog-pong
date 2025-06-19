@@ -2,6 +2,7 @@
   "recommendations": [
     "gruntfuggly.triggertaskonsave",
     "konicy.conan-extension",
-    "ms-vscode.cpptools-extension-pack"
+    "ms-vscode.cpptools-extension-pack",
+    "mechatroner.rainbow-csv"
   ]
 }
