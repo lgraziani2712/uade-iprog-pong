@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-enum PartidaEstado { Empate = 0, JUGADOR_1, JUGADOR_2, QUIT };
+const enum PartidaEstado { Empate = 0, JUGADOR_1, JUGADOR_2, QUIT, P_CPU };
 
 struct Resultado {
   PartidaEstado estado;

@@ -77,18 +77,20 @@ void Juego::Menu() {
   SDL_Event event;
   // 0 a 3
   int posicion = 0;
-  std::array<const char *, 3> textosNoSeleccionados = {"Jugar", "Ranking",
-                                                       "Salir"};
-  std::array<const char *, 3> textosSeleccionados = {"JUGAR", "RANKING",
-                                                     "SALIR"};
+  std::array<const char *, 4> textosNoSeleccionados = {
+      "Jugar Solo", "Jugar 1v1", "Ranking", "Salir"};
+  std::array<const char *, 4> textosSeleccionados = {"JUGAR SOLO", "JUGAR 1v1",
+                                                     "RANKING", "SALIR"};
 
-  std::array<Texto, 3> textos = {
+  std::array<Texto, 4> textos = {
       Texto(renderer, fuente, textosSeleccionados[0], Alineacion::Centro,
-            Vec(width / 2, (height / 2) - 100)),
-      Texto(renderer, fuente, textosNoSeleccionados[1], Alineacion::Centro,
-            Vec(width / 2, height / 2)),
+            Vec(width / 2, (height / 2) - 150)),
+      Texto(renderer, fuente, textosSeleccionados[1], Alineacion::Centro,
+            Vec(width / 2, (height / 2) - 50)),
       Texto(renderer, fuente, textosNoSeleccionados[2], Alineacion::Centro,
-            Vec(width / 2, (height / 2) + 100))};
+            Vec(width / 2, (height / 2) + 50)),
+      Texto(renderer, fuente, textosNoSeleccionados[3], Alineacion::Centro,
+            Vec(width / 2, (height / 2) + 150))};
 
   while (estado == JuegoEstado::MENU) {
     while (SDL_PollEvent(&event)) {
@@ -102,7 +104,7 @@ void Juego::Menu() {
           textos[posicion].Actualizar(textosNoSeleccionados[posicion]);
 
           posicion--;
-          posicion = posicion < 0 ? 2 : posicion;
+          posicion = posicion < 0 ? 3 : posicion;
 
           // Corrijo el texto actual para que figure como seleccionado
           textos[posicion].Actualizar(textosSeleccionados[posicion]);
@@ -111,7 +113,7 @@ void Juego::Menu() {
           // Corrijo el texto actual para que figure como deseleccionado
           textos[posicion].Actualizar(textosNoSeleccionados[posicion]);
 
-          posicion = (posicion + 1) % 3;
+          posicion = (posicion + 1) % 4;
 
           // Corrijo el texto actual para que figure como seleccionado
           textos[posicion].Actualizar(textosSeleccionados[posicion]);
@@ -119,13 +121,17 @@ void Juego::Menu() {
         case SDLK_RETURN:
           switch (posicion) {
             case 0:
-              render->Iniciar();
+              render->Iniciar(TipoJugador::CPU);
               estado = JuegoEstado::PLAY;
               break;
             case 1:
-              estado = JuegoEstado::RANKING;
+              render->Iniciar(TipoJugador::PERSONA);
+              estado = JuegoEstado::PLAY;
               break;
             case 2:
+              estado = JuegoEstado::RANKING;
+              break;
+            case 3:
               estado = JuegoEstado::EXIT;
               break;
           }
@@ -288,37 +294,37 @@ void Juego::Ranking() {
   auto resultados = leer();
   auto titulo =
       Texto(renderer, fuente,
-            "| Resultado   | Jugador1    | Jugador2    | Tiempo      |",
-            Alineacion::Izq, Vec(50, 50));
+            "| Resultado    | Jugador1     | Jugador2/CPU | Tiempo       |",
+            Alineacion::Izq, Vec(5, 40));
   auto subtitulo =
       Texto(renderer, fuente,
-            "|=============|=============|=============|=============|",
-            Alineacion::Izq, Vec(50, 87));
+            "|==============|==============|==============|==============|",
+            Alineacion::Izq, Vec(5, 77));
   std::vector<std::unique_ptr<Texto>> textos;
 
   for (int i = 0; i < resultados.size(); i++) {
     auto resultado = resultados[i];
     std::string estado = resultado.estado == PartidaEstado::QUIT ? "Cancelada"
                          : resultado.estado == PartidaEstado::Empate ? "Empate"
-                         : resultado.estado == PartidaEstado::JUGADOR_1
-                             ? "Victoria P1"
-                             : "Victoria P2";
+                         : resultado.estado == PartidaEstado::JUGADOR_1 ? "P1"
+                         : resultado.estado == PartidaEstado::P_CPU     ? "CPU"
+                                                                        : "P2";
     auto resP1 = std::to_string(resultado.jugador1);
     auto resP2 = std::to_string(resultado.jugador2);
     auto tiempo = std::format("{:.2f}", resultado.tiempo);
 
-    if (estado.size() < 11) {
-      estado.append(11 - estado.size(), ' ');
+    if (estado.size() < 12) {
+      estado.append(12 - estado.size(), ' ');
     }
-    resP1.append(11 - resP1.size(), ' ');
-    resP2.append(11 - resP2.size(), ' ');
-    tiempo.append(11 - tiempo.size(), ' ');
+    resP1.append(12 - resP1.size(), ' ');
+    resP2.append(12 - resP2.size(), ' ');
+    tiempo.append(12 - tiempo.size(), ' ');
 
     textos.push_back(std::make_unique<Texto>(
         renderer, fuente,
         ("| " + estado + " | " + resP1 + " | " + resP2 + " | " + tiempo + " |")
             .c_str(),
-        Alineacion::Izq, Vec(50, 124 + i * 37)));
+        Alineacion::Izq, Vec(5, 114 + i * 37)));
   }
 
   while (estado == JuegoEstado::RANKING) {

@@ -17,6 +17,7 @@
 - Sonido original del fuego: https://pixabay.com/sound-effects/short-fire-whoosh-1-317280/.
 - Stackoverflow y la web en general para las guías de uso de la librería SDL.
 - Sonido original del punto: https://pixabay.com/sound-effects/success-340660/.
+- Ícono original: https://www.freepik.com/icon/ping-pong_1687641.
 
 ## Requisitos técnicos
 

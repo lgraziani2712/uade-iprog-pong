@@ -7,7 +7,8 @@ Paleta::Paleta(int id, SDL_Renderer* renderer, float x, float y)
     : posicion(Vec(x - PALETA_ANCHO / 2.0f, y - PALETA_ALTO / 2.0f)),
       velocidad(Vec(0.0f, 0.0f)),
       renderer(renderer),
-      id(id) {
+      id(id),
+      tipo(tipo) {
   rect.x = static_cast<int>(posicion.x);
   rect.w = PALETA_ANCHO;
   rect.h = PALETA_ALTO;
@@ -26,10 +27,44 @@ void Paleta::Dibujar() {
 }
 
 void Paleta::AplicarVelocidad(bool arriba, bool abajo) {
+  if (tipo == TipoJugador::CPU) {
+    return;
+  }
   if (arriba) {
     velocidad.y = -celeridad;
   } else if (abajo) {
     velocidad.y = celeridad;
+  } else {
+    velocidad.y = 0.0f;
+  }
+}
+
+void Paleta::AplicarVelocidad(uint64_t tiempo, Pelota* pelota) {
+  if (tipo == TipoJugador::PERSONA) {
+    return;
+  }
+  // Va más lento
+
+  auto verticesPelota = pelota->Vertices();
+  float vertices[4] = {posicion.x, posicion.x + PALETA_ANCHO, posicion.y,
+                       posicion.y + PALETA_ALTO};
+
+  if (vertices[Lado::Arriba] > verticesPelota[Lado::Abajo]) {
+    movimiento = PaletaMovimiento::SUBE;
+    velocidad.y = -celeridad * 0.9f;
+  } else if (vertices[Lado::Abajo] < verticesPelota[Lado::Arriba]) {
+    if (movimiento != PaletaMovimiento::BAJA) {
+      movimiento = PaletaMovimiento::BAJA;
+      tiempoInicio = tiempo;
+    }
+    auto diffTiempo = tiempo - tiempoInicio;
+    if (diffTiempo > 400) {
+      // Terminó animación
+      velocidad.y = celeridad;
+    } else {
+      float deltaAnimacion = diffTiempo / 1000.0f;
+      velocidad.y = (celeridad * (deltaAnimacion + 0.6));
+    }
   } else {
     velocidad.y = 0.0f;
   }
@@ -47,8 +82,15 @@ void Paleta::Actualizar(float dt, int height) {
   }
 }
 
+void Paleta::Reiniciar(float x, float y, TipoJugador nuevoTipo) {
+  tipo = nuevoTipo;
+
+  Reiniciar(x, y);
+}
 void Paleta::Reiniciar(float x, float y) {
   velocidad = Vec(0.0f, 0.0f);
+  movimiento = PaletaMovimiento::QUIETA;
+  tiempoInicio = -1;
   posicion = Vec(x - PALETA_ANCHO / 2.0f, y - PALETA_ALTO / 2.0f);
   rect.x = static_cast<int>(posicion.x);
 }

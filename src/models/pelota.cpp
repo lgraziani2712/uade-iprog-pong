@@ -52,11 +52,6 @@ void Pelota::Colision(Contacto contacto) {
   if (idContacto == contacto.id) {
     return;
   }
-  if (contacto.tipo == Colision::Nada) {
-    idContacto = -1;
-
-    return;
-  }
   idContacto = contacto.id;
   Mix_PlayChannel(-1, golpe, 0);
 
@@ -65,7 +60,7 @@ void Pelota::Colision(Contacto contacto) {
 
   switch (contacto.tipo) {
     case Colision::Arriba:
-      velocidad.y = -.85f * celeridad;
+      velocidad.y = -0.85f * celeridad;
       break;
     case Colision::Abajo:
       velocidad.y = 0.85f * celeridad;
@@ -94,6 +89,11 @@ Contacto Pelota::ColisionConPared(int windowWidth, int windowHeight) {
     contacto.tipo = Colision::Abajo;
     contacto.penetracion = windowHeight - vertices[Lado::Abajo];
   }
+  if (contacto.tipo == Colision::Nada) {
+    return contacto;
+  }
+  // Al colisionar con cualquier pared, reseteo contacto
+  idContacto = -1;
 
   // Aplico el contacto, corrijo posición y velocidad
   switch (contacto.tipo) {
@@ -108,13 +108,13 @@ Contacto Pelota::ColisionConPared(int windowWidth, int windowHeight) {
       posicion.x = (windowWidth - PELOTA_ANCHO) / 2.0f;
       posicion.y = (windowHeight - PELOTA_ALTO) / 2.0f;
       velocidad.x = celeridad;
-      velocidad.y = 0.75f * celeridad;
+      velocidad.y = 0.85f * celeridad;
       break;
     case Colision::Derecha:
       posicion.x = (windowWidth - PELOTA_ANCHO) / 2.0f;
       posicion.y = (windowHeight - PELOTA_ALTO) / 2.0f;
       velocidad.x = -celeridad;
-      velocidad.y = 0.75f * celeridad;
+      velocidad.y = 0.85f * celeridad;
       break;
   }
 

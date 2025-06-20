@@ -22,7 +22,7 @@ class Pelota {
   Vec Velocidad();
 
  private:
-  float celeridad = 1.0f;
+  float celeridad = 0.85f;
   Vec posicion;
   Vec velocidad;
   SDL_Rect rect{};

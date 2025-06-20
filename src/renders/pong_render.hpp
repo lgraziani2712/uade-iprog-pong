@@ -22,7 +22,7 @@ class PongRender {
   void ActualizarInputs();
   void Recalcular(double deltaTime);
   void Dibujar();
-  void Iniciar();
+  void Iniciar(TipoJugador tipo);
   Resultado ResultadoUltimaPartida();
   void FinalizarPartida(bool porCancelado);
   PongEstado Estado();

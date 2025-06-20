@@ -43,7 +43,7 @@ void PongRender::Dibujar() {
   contador->Dibujar();
 }
 
-void PongRender::Iniciar() {
+void PongRender::Iniciar(TipoJugador tipo) {
   estado = PongEstado::SAQUE;
   tiempoInicio = SDL_GetTicks64();
   tiempoEnPausa = 0;
@@ -53,7 +53,7 @@ void PongRender::Iniciar() {
   pelota->Reiniciar(width / 2.0f, height / 2.0f);
 
   paleta1->Reiniciar(50.0f, height / 2.0f);
-  paleta2->Reiniciar(width - 50.0f, height / 2.0f);
+  paleta2->Reiniciar(width - 50.0f, height / 2.0f, tipo);
 
   puntaje1->Reiniciar();
   puntaje2->Reiniciar();
@@ -108,6 +108,7 @@ void PongRender::Recalcular(double deltaTime) {
   paleta1->AplicarVelocidad(input->Tecla(Teclas::w), input->Tecla(Teclas::s));
   paleta2->AplicarVelocidad(input->Tecla(Teclas::ARRIBA),
                             input->Tecla(Teclas::ABAJO));
+  paleta2->AplicarVelocidad(SDL_GetTicks64() - tiempoInicio, pelota.get());
 
   // Actualizo la posición de cada objeto
   paleta1->Actualizar(deltaTime, height);
@@ -164,8 +165,9 @@ void PongRender::FinalizarPartida(bool porCancelado) {
   resultado.estado =
       porCancelado                              ? PartidaEstado::QUIT
       : resultado.jugador1 > resultado.jugador2 ? PartidaEstado::JUGADOR_1
-      : resultado.jugador2 > resultado.jugador1 ? PartidaEstado::JUGADOR_2
-                                                : PartidaEstado::Empate;
+      : resultado.jugador2 > resultado.jugador1
+          ? TipoJugador::CPU ? PartidaEstado::P_CPU : PartidaEstado::JUGADOR_2
+          : PartidaEstado::Empate;
 }
 
 PongEstado PongRender::Estado() { return estado; }
