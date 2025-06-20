@@ -1,4 +1,5 @@
 #include "juego.hpp"
+#include <SDL2/SDL_image.h>
 #include <array>
 #include <format>
 #include <memory>
@@ -12,6 +13,16 @@
 Juego::Juego() {
   window = createWindow();
   renderer = createRenderer(window);
+
+  // Seteo ícono del juego
+  SDL_Surface *iconSurface = IMG_Load(getAssetsPath("logo.webp").c_str());
+
+  if (iconSurface == NULL) {
+    throw std::runtime_error(SDL_GetError());
+  }
+  SDL_SetWindowIcon(window, iconSurface);
+  SDL_FreeSurface(iconSurface);
+
   // Instancio las cosas que necesito
   fuente = TTF_OpenFont(getAssetsPath("HurmitNerdFont-Bold.otf").c_str(), 40);
 

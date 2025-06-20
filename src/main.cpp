@@ -24,7 +24,7 @@ int SDL_main(int argc, char* argv[]) {
     return 1;
   }
 
-  // Esta variable contiene una instancia de tipo FinalAction (auto le pide al
+    // Esta variable contiene una instancia de tipo FinalAction (auto le pide al
   // compilador que deduzca automáticamente el tipo de variable). Esta guarda no
   // hace nada excepto esperar a que se cierre el programa. Cuando ocurra el
   // cierre y la instancia se esté por destruir, se invocará la función de
