@@ -29,4 +29,5 @@ class Pelota {
   SDL_Renderer* renderer;
   SDL_Texture* texture;
   Mix_Chunk* golpe;
+  int idContacto = -1;
 };

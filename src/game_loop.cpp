@@ -13,8 +13,6 @@ void gameLoop(SDL_Window* window, SDL_Renderer* renderer,
   // REGLA: todos los objetos de una escena deberían actualizarse en base al
   // `delta`.
   double deltaBetweenFrames = 0;
-  // Serviría si aplicásemos operaciones de animación basadas en tiempo tiempo.
-  double tiempoDeJuego = 0;
   // in ms
   const double DELTA_TIME = (1000.0 / (double)APP_FPS);
 
@@ -35,8 +33,7 @@ void gameLoop(SDL_Window* window, SDL_Renderer* renderer,
         deltaBetweenFrames < DELTA_TIME ? deltaBetweenFrames : DELTA_TIME;
 
     // 3. Actualizar el juego con el delta time en ms.
-    gameRender->Recalcular(tiempoDeJuego, deltaTime);
-    tiempoDeJuego += deltaTime;
+    gameRender->Recalcular(deltaTime);
 
     // 4. Render
     gameRender->Dibujar();

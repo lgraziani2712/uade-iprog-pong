@@ -24,7 +24,14 @@ int SDL_main(int argc, char* argv[]) {
     return 1;
   }
 
-    // Esta variable contiene una instancia de tipo FinalAction (auto le pide al
+  // Initial configuration
+  if (SDL_ShowCursor(SDL_DISABLE) < 0) {
+    SDL_Log("No se pudo ocultar el mouse: %s", SDL_GetError());
+    return 1;
+  }
+  Mix_Volume(-1, 60);
+
+  // Esta variable contiene una instancia de tipo FinalAction (auto le pide al
   // compilador que deduzca automáticamente el tipo de variable). Esta guarda no
   // hace nada excepto esperar a que se cierre el programa. Cuando ocurra el
   // cierre y la instancia se esté por destruir, se invocará la función de

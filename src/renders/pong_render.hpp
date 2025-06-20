@@ -11,7 +11,7 @@
 #include "../models/puntaje_jugador.hpp"
 #include "../models/texto.hpp"
 
-const enum PongEstado { INICIAR, PAUSAR, FIN };
+const enum PongEstado { SAQUE, EN_JUEGO, PAUSAR, FIN };
 
 class PongRender {
  public:
@@ -20,7 +20,7 @@ class PongRender {
   ~PongRender();
   bool Corriendo();
   void ActualizarInputs();
-  void Recalcular(double tiempoTotal, double deltaTime);
+  void Recalcular(double deltaTime);
   void Dibujar();
   void Iniciar();
   Resultado ResultadoUltimaPartida();

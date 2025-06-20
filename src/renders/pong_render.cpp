@@ -9,8 +9,8 @@ PongRender::PongRender(SDL_Window* window, SDL_Renderer* renderer,
 
   fondo = std::make_unique<Fondo>(renderer, width, height);
   pelota = std::make_unique<Pelota>(renderer, width / 2.0f, height / 2.0f);
-  paleta1 = std::make_unique<Paleta>(renderer, 50.0f, height / 2.0f);
-  paleta2 = std::make_unique<Paleta>(renderer, width - 50.0f, height / 2.0f);
+  paleta1 = std::make_unique<Paleta>(1, renderer, 50.0f, height / 2.0f);
+  paleta2 = std::make_unique<Paleta>(2, renderer, width - 50.0f, height / 2.0f);
   puntaje1 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
                                               Vec(width / 4, 20));
   puntaje2 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
@@ -44,7 +44,7 @@ void PongRender::Dibujar() {
 }
 
 void PongRender::Iniciar() {
-  estado = PongEstado::INICIAR;
+  estado = PongEstado::SAQUE;
   tiempoInicio = SDL_GetTicks64();
   tiempoEnPausa = 0;
   contador->Actualizar("0.00s");
@@ -64,7 +64,7 @@ void PongRender::Pausar(bool pausar) {
     estado = PongEstado::PAUSAR;
     tiempoEnPausa = SDL_GetTicks64();
   } else {
-    estado = PongEstado::INICIAR;
+    estado = PongEstado::EN_JUEGO;
     input->Reiniciar();
 
     // Adelanto N ms según el tiempo en pausa para que no siga sumando segundos
@@ -75,17 +75,35 @@ void PongRender::Pausar(bool pausar) {
 
 Resultado PongRender::ResultadoUltimaPartida() { return resultado; }
 
-bool PongRender::Corriendo() { return estado == PongEstado::INICIAR; }
+bool PongRender::Corriendo() {
+  return estado == PongEstado::SAQUE || estado == PongEstado::EN_JUEGO;
+}
 
 void PongRender::ActualizarInputs() {
   input->Actualizar();
+
+  if (input->Tecla(Teclas::ENTER) && estado == PongEstado::SAQUE) {
+    estado = PongEstado::EN_JUEGO;
+  }
 
   if (input->Tecla(Teclas::ESC)) {
     Pausar(true);
   }
 }
 
-void PongRender::Recalcular(double tiempoTotal, double deltaTime) {
+void PongRender::Recalcular(double deltaTime) {
+  contador->Actualizar(
+      std::format("{:.2f}s",
+                  (double)(SDL_GetTicks64() - tiempoInicio) / (double)1000.0)
+          .c_str());
+
+  if (estado == PongEstado::SAQUE) {
+    // Esto es por si al despistarse, se pasa de los 120s. Sacar es parte del
+    // juego y corre el tiempo.
+    VerificarFin();
+
+    return;
+  }
   // Aplico velocidad de movimiento en paletas
   paleta1->AplicarVelocidad(input->Tecla(Teclas::w), input->Tecla(Teclas::s));
   paleta2->AplicarVelocidad(input->Tecla(Teclas::ARRIBA),
@@ -100,19 +118,20 @@ void PongRender::Recalcular(double tiempoTotal, double deltaTime) {
   paleta1->Colision(pelota.get());
   paleta2->Colision(pelota.get());
 
-  contador->Actualizar(
-      std::format("{:.2f}s",
-                  (double)(SDL_GetTicks64() - tiempoInicio) / (double)1000.0)
-          .c_str());
-
   Contacto contacto = pelota->ColisionConPared(width, height);
 
   switch (contacto.tipo) {
     case Colision::Izquierda:
       puntaje2->Aumentar();
+      paleta1->Reiniciar(50.0f, height / 2.0f);
+      paleta2->Reiniciar(width - 50.0f, height / 2.0f);
+      estado = PongEstado::SAQUE;
       break;
     case Colision::Derecha:
       puntaje1->Aumentar();
+      paleta1->Reiniciar(50.0f, height / 2.0f);
+      paleta2->Reiniciar(width - 50.0f, height / 2.0f);
+      estado = PongEstado::SAQUE;
       break;
   }
 

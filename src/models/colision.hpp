@@ -6,4 +6,6 @@ enum Lado { Izquierdo = 0, Derecho, Arriba, Abajo };
 struct Contacto {
   Colision tipo;
   float penetracion;
+  // Permite saber qué paleta tuvo contacto
+  int id;
 };

@@ -50,7 +50,20 @@ void Input::Actualizar() {
   }
 }
 
-bool Input::Tecla(int nombre) { return teclas[nombre]; }
+bool Input::Tecla(int nombre) {
+  auto valor = teclas[nombre];
+
+  // Se limpia la lectura de teclas de una sola lectura (simulando el onClick en
+  // vez de onPress)
+  switch (nombre) {
+    case Teclas::ENTER:
+    case Teclas::ESC:
+      teclas[nombre] = false;
+      break;
+  }
+
+  return valor;
+}
 
 void Input::Reiniciar() {
   for (int i = 0; i < 6; i++) {

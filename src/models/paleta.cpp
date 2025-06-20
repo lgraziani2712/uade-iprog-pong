@@ -3,10 +3,11 @@
 #include <iostream>
 #include "../configs.hpp"
 
-Paleta::Paleta(SDL_Renderer* renderer, float x, float y)
+Paleta::Paleta(int id, SDL_Renderer* renderer, float x, float y)
     : posicion(Vec(x - PALETA_ANCHO / 2.0f, y - PALETA_ALTO / 2.0f)),
       velocidad(Vec(0.0f, 0.0f)),
-      renderer(renderer) {
+      renderer(renderer),
+      id(id) {
   rect.x = static_cast<int>(posicion.x);
   rect.w = PALETA_ANCHO;
   rect.h = PALETA_ALTO;
@@ -49,6 +50,7 @@ void Paleta::Actualizar(float dt, int height) {
 void Paleta::Reiniciar(float x, float y) {
   velocidad = Vec(0.0f, 0.0f);
   posicion = Vec(x - PALETA_ANCHO / 2.0f, y - PALETA_ALTO / 2.0f);
+  rect.x = static_cast<int>(posicion.x);
 }
 
 void Paleta::Colision(Pelota* pelota) {
@@ -57,6 +59,8 @@ void Paleta::Colision(Pelota* pelota) {
                        posicion.y + PALETA_ALTO};
   // TODO: Usar SDL_IntersectRect
   Contacto contacto{};
+
+  contacto.id = id;
 
   if ((verticesPelota[Lado::Izquierdo] > vertices[Lado::Derecho]) ||
       (verticesPelota[Lado::Derecho] < vertices[Lado::Izquierdo]) ||

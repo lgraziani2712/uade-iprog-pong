@@ -11,7 +11,7 @@
 
 class Paleta {
  public:
-  Paleta(SDL_Renderer* renderer, float x, float y);
+  Paleta(int id, SDL_Renderer* renderer, float x, float y);
   ~Paleta();
 
   void Dibujar();
@@ -22,6 +22,7 @@ class Paleta {
 
  private:
   float celeridad = 1.0f;
+  int id;
   Vec posicion;
   Vec velocidad;
   SDL_Rect rect{};
