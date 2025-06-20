@@ -21,10 +21,11 @@ PongRender::PongRender(SDL_Window* window, SDL_Renderer* renderer,
             getAssetsPath("4360_pong_paddle.wav").c_str());
   }
 
-  pelota = std::make_unique<Pelota>(width / 2.0f, height / 2.0f,
+  fondo = std::make_unique<Fondo>(renderer, width, height);
+  pelota = std::make_unique<Pelota>(renderer, width / 2.0f, height / 2.0f,
                                     paletaGolpeSonido, paredGolpeSonido);
-  paleta1 = std::make_unique<Paleta>(50.0f, height / 2.0f);
-  paleta2 = std::make_unique<Paleta>(width - 50.0f, height / 2.0f);
+  paleta1 = std::make_unique<Paleta>(renderer, 50.0f, height / 2.0f);
+  paleta2 = std::make_unique<Paleta>(renderer, width - 50.0f, height / 2.0f);
   puntaje1 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
                                               Vec(width / 4, 20));
   puntaje2 = std::make_unique<PuntajeJugador>(renderer, fuenteDelPuntaje,
@@ -51,12 +52,13 @@ void PongRender::Dibujar() {
   SDL_GetWindowSize(window, &width, &height);
 
   // Dibujo los objetos
+  fondo->Dibujar();
   DibujarRed();
 
-  pelota->Dibujar(renderer);
+  pelota->Dibujar();
 
-  paleta1->Dibujar(renderer);
-  paleta2->Dibujar(renderer);
+  paleta1->Dibujar();
+  paleta2->Dibujar();
 
   puntaje1->Dibujar();
   puntaje2->Dibujar();

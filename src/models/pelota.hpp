@@ -6,13 +6,15 @@
 #include "colision.hpp"
 #include "vec.hpp"
 
-#define PELOTA_ANCHO 15
-#define PELOTA_ALTO 15
+#define PELOTA_ANCHO 20
+#define PELOTA_ALTO 20
 
 class Pelota {
  public:
-  Pelota(float x, float y, Mix_Chunk* golpePaleta, Mix_Chunk* golpePared);
-  void Dibujar(SDL_Renderer* renderer);
+  Pelota(SDL_Renderer* renderer, float x, float y, Mix_Chunk* golpePaleta,
+         Mix_Chunk* golpePared);
+  ~Pelota();
+  void Dibujar();
   void Actualizar(float dt);
   std::array<float, 4> Vertices();
   void Colision(Contacto contacto);
@@ -25,5 +27,7 @@ class Pelota {
   Vec posicion;
   Vec velocidad;
   SDL_Rect rect{};
+  SDL_Renderer* renderer;
+  SDL_Texture* texture;
   Mix_Chunk *golpePaleta, *golpePared;
 };

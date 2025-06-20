@@ -1,5 +1,11 @@
 # Pong - Proyecto para "UADE::Introducción a la programación"
 
+- TODO: agregar vs CPU y menú acorde.
+- TODO: agregar imágenes.
+- TODO: Manual de uso.
+- TODO: modo extra?
+- TODO: agregar icono
+
 ## Requisitos técnicos
 
 Este proyecto funciona con **Conan** + **CMake** para simplificar el proceso de instalación de dependencias, _buildeo_ y _debuggeo_.
@@ -50,6 +56,8 @@ conan install . --build=missing
 > Esta documentación fue traducida sin inteligencia artificial del texto que el comando `conan install --help` entrega.
 
 ### Instalar y construir dependencias con el perfil de Debug:
+
+> NOTA: no es necesario y lleva mucho tiempo, a menos que se quieran correr el entorno de debugeo.
 
 ```sh
 conan install . -s build_type=Debug --build=missing

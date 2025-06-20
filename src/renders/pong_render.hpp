@@ -5,6 +5,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <memory>
 #include "../models/estado_pong.hpp"
+#include "../models/fondo.hpp"
 #include "../models/input.hpp"
 #include "../models/paleta.hpp"
 #include "../models/pelota.hpp"
@@ -54,6 +55,7 @@ class PongRender {
   std::unique_ptr<PuntajeJugador> puntaje2;
   std::unique_ptr<Input> input;
   std::unique_ptr<Texto> contador;
+  std::unique_ptr<Fondo> fondo;
 
   void DibujarRed();
   void VerificarFin();

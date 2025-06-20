@@ -6,14 +6,15 @@
 #include "pelota.hpp"
 #include "vec.hpp"
 
-#define PALETA_ANCHO 10
-#define PALETA_ALTO 100
+#define PALETA_ANCHO 30
+#define PALETA_ALTO 120
 
 class Paleta {
  public:
-  Paleta(float x, float y);
+  Paleta(SDL_Renderer* renderer, float x, float y);
+  ~Paleta();
 
-  void Dibujar(SDL_Renderer* renderer);
+  void Dibujar();
   void AplicarVelocidad(bool arriba, bool abajo);
   void Actualizar(float dt, int height);
   void Colision(Pelota* pelota);
@@ -24,4 +25,6 @@ class Paleta {
   Vec posicion;
   Vec velocidad;
   SDL_Rect rect{};
+  SDL_Renderer* renderer;
+  SDL_Texture* texture;
 };

@@ -4,4 +4,7 @@
 *.woff2 binary
 *.wav binary
 
+*.png binary
+*.webp binary
+
 * text eol=lf

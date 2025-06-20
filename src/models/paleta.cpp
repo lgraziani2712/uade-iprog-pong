@@ -1,17 +1,27 @@
 #include "paleta.hpp"
+#include <SDL2/SDL_image.h>
 #include <iostream>
+#include "../configs.hpp"
 
-Paleta::Paleta(float x, float y)
-    : posicion(Vec(x, y - PALETA_ALTO / 2.0f)), velocidad(Vec(0.0f, 0.0f)) {
+Paleta::Paleta(SDL_Renderer* renderer, float x, float y)
+    : posicion(Vec(x - PALETA_ANCHO / 2.0f, y - PALETA_ALTO / 2.0f)),
+      velocidad(Vec(0.0f, 0.0f)),
+      renderer(renderer) {
   rect.x = static_cast<int>(posicion.x);
   rect.w = PALETA_ANCHO;
   rect.h = PALETA_ALTO;
+
+  texture = IMG_LoadTexture(renderer, getAssetsPath("basalto.webp").c_str());
 }
 
-void Paleta::Dibujar(SDL_Renderer* renderer) {
+Paleta::~Paleta() { SDL_DestroyTexture(texture); }
+
+void Paleta::Dibujar() {
   rect.y = static_cast<int>(posicion.y);
 
-  SDL_RenderFillRect(renderer, &rect);
+  if (SDL_RenderCopy(renderer, texture, nullptr, &rect) != 0) {
+    SDL_Log(SDL_GetError());
+  }
 }
 
 void Paleta::AplicarVelocidad(bool arriba, bool abajo) {
@@ -38,7 +48,7 @@ void Paleta::Actualizar(float dt, int height) {
 
 void Paleta::Reiniciar(float x, float y) {
   velocidad = Vec(0.0f, 0.0f);
-  posicion = Vec(x, y - PALETA_ALTO / 2.0f);
+  posicion = Vec(x - PALETA_ANCHO / 2.0f, y - PALETA_ALTO / 2.0f);
 }
 
 void Paleta::Colision(Pelota* pelota) {
@@ -71,8 +81,8 @@ void Paleta::Colision(Pelota* pelota) {
   if ((verticesPelota[Lado::Abajo] > vertices[Lado::Arriba]) &&
       (verticesPelota[Lado::Abajo] < rangoSuperior)) {
     contacto.tipo = Colision::Arriba;
-  } else if ((verticesPelota[Lado::Abajo] > rangoSuperior) &&
-             (verticesPelota[Lado::Abajo] < rangoMedio)) {
+  } else if ((verticesPelota[Lado::Abajo] >= rangoSuperior) &&
+             (verticesPelota[Lado::Abajo] <= rangoMedio)) {
     contacto.tipo = Colision::Centro;
   } else {
     contacto.tipo = Colision::Abajo;

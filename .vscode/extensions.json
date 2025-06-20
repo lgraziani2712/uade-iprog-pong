@@ -3,6 +3,7 @@
     "gruntfuggly.triggertaskonsave",
     "konicy.conan-extension",
     "ms-vscode.cpptools-extension-pack",
-    "mechatroner.rainbow-csv"
+    "mechatroner.rainbow-csv",
+    "kylinideteam.cmake-intellisence"
   ]
 }

@@ -1,21 +1,32 @@
 #include "pelota.hpp"
+#include <SDL2/SDL_image.h>
+#include "../configs.hpp"
 
-Pelota::Pelota(float x, float y, Mix_Chunk* golpePaleta, Mix_Chunk* golpePared)
+Pelota::Pelota(SDL_Renderer* renderer, float x, float y, Mix_Chunk* golpePaleta,
+               Mix_Chunk* golpePared)
     // A la posición que recibimos, restamos la mitad del alto y mitad del
     // ancho de la pelota para que ésta esté anclada en su centro
     : posicion(Vec(x, y)),
       velocidad(Vec(celeridad, 0.0f)),
       golpePaleta(golpePaleta),
-      golpePared(golpePared) {
+      golpePared(golpePared),
+      renderer(renderer) {
+  texture = IMG_LoadTexture(renderer, getAssetsPath("fuego.webp").c_str());
+
+  // Visual
   rect.w = PELOTA_ANCHO;
-  rect.h = PELOTA_ALTO;
+  rect.h = (PELOTA_ALTO + 12);
 }
 
-void Pelota::Dibujar(SDL_Renderer* renderer) {
+Pelota::~Pelota() { SDL_DestroyTexture(texture); }
+
+void Pelota::Dibujar() {
   rect.x = static_cast<int>(posicion.x);
   rect.y = static_cast<int>(posicion.y);
 
-  SDL_RenderFillRect(renderer, &rect);
+  if (SDL_RenderCopy(renderer, texture, nullptr, &rect) != 0) {
+    SDL_Log(SDL_GetError());
+  }
 }
 
 void Pelota::Actualizar(float dt) { posicion += velocidad * dt; }
@@ -33,10 +44,10 @@ void Pelota::Colision(Contacto contacto) {
 
   switch (contacto.tipo) {
     case Colision::Arriba:
-      velocidad.y = -.75f * celeridad;
+      velocidad.y = -.85f * celeridad;
       break;
     case Colision::Abajo:
-      velocidad.y = 0.75f * celeridad;
+      velocidad.y = 0.85f * celeridad;
       break;
   }
 }
