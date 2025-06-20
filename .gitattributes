@@ -2,7 +2,9 @@
 *.ttf binary
 *.woff binary
 *.woff2 binary
+
 *.wav binary
+*.mp3 binary
 
 *.png binary
 *.webp binary

@@ -11,8 +11,7 @@
 
 class Pelota {
  public:
-  Pelota(SDL_Renderer* renderer, float x, float y, Mix_Chunk* golpePaleta,
-         Mix_Chunk* golpePared);
+  Pelota(SDL_Renderer* renderer, float x, float y);
   ~Pelota();
   void Dibujar();
   void Actualizar(float dt);
@@ -29,5 +28,5 @@ class Pelota {
   SDL_Rect rect{};
   SDL_Renderer* renderer;
   SDL_Texture* texture;
-  Mix_Chunk *golpePaleta, *golpePared;
+  Mix_Chunk* golpe;
 };

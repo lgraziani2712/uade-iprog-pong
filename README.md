@@ -1,10 +1,22 @@
 # Pong - Proyecto para "UADE::Introducción a la programación"
 
-- TODO: agregar vs CPU y menú acorde.
-- TODO: agregar imágenes.
-- TODO: Manual de uso.
-- TODO: modo extra?
-- TODO: agregar icono
+## Herramientas utilizadas en el proyecto:
+
+- Adobe Audition: para recortar y comprimir sonidos.
+- Adobe Photoshop: para editar las imágenes.
+- VSCode: editor de código, compilador y debugger.
+- PowerShell: terminal de línea de comandos.
+- Conan: para administrar las dependencias del proyecto.
+- CMake para compilar la versión debugger y producción.
+- Clang: para formatear el código.
+- Git: para llevar historial de cambios y documentar el proceso.
+
+## Recursos de terceros utilizados:
+
+- Imágenes originales obtenidas a través de duckduck.go.
+- Sonido original del fuego: https://pixabay.com/sound-effects/short-fire-whoosh-1-317280/.
+- Stackoverflow y la web en general para las guías de uso de la librería SDL.
+- Sonido original del punto: https://pixabay.com/sound-effects/success-340660/.
 
 ## Requisitos técnicos
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 #include "vec.hpp"
 
@@ -22,4 +23,5 @@ class PuntajeJugador {
   SDL_Surface* surface{};
   SDL_Texture* texture{};
   SDL_Rect rect{};
+  Mix_Chunk* sonido;
 };

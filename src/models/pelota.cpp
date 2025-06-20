@@ -2,23 +2,29 @@
 #include <SDL2/SDL_image.h>
 #include "../configs.hpp"
 
-Pelota::Pelota(SDL_Renderer* renderer, float x, float y, Mix_Chunk* golpePaleta,
-               Mix_Chunk* golpePared)
-    // A la posición que recibimos, restamos la mitad del alto y mitad del
-    // ancho de la pelota para que ésta esté anclada en su centro
-    : posicion(Vec(x, y)),
-      velocidad(Vec(celeridad, 0.0f)),
-      golpePaleta(golpePaleta),
-      golpePared(golpePared),
-      renderer(renderer) {
+Pelota::Pelota(SDL_Renderer* renderer, float x, float y)
+    : posicion(Vec(x, y)), velocidad(Vec(celeridad, 0.0f)), renderer(renderer) {
   texture = IMG_LoadTexture(renderer, getAssetsPath("fuego.webp").c_str());
+
+  golpe = Mix_LoadWAV(getAssetsPath("short-fire-whoosh_1-317280.mp3").c_str());
+  if (golpe == NULL) {
+    SDL_Log("Incapaz de inicializar Sonido: %s. Path: %s", SDL_GetError(),
+            getAssetsPath("short-fire-whoosh_1-317280.mp3").c_str());
+  }
 
   // Visual
   rect.w = PELOTA_ANCHO;
   rect.h = (PELOTA_ALTO + 12);
 }
 
-Pelota::~Pelota() { SDL_DestroyTexture(texture); }
+Pelota::~Pelota() {
+  if (texture != NULL) {
+    SDL_DestroyTexture(texture);
+  }
+  if (golpe != NULL) {
+    Mix_FreeChunk(golpe);
+  }
+}
 
 void Pelota::Dibujar() {
   rect.x = static_cast<int>(posicion.x);
@@ -37,7 +43,7 @@ std::array<float, 4> Pelota::Vertices() {
 }
 
 void Pelota::Colision(Contacto contacto) {
-  Mix_PlayChannel(-1, golpePaleta, 0);
+  Mix_PlayChannel(-1, golpe, 0);
 
   posicion.x += contacto.penetracion;
   velocidad.x = -velocidad.x;
@@ -78,7 +84,7 @@ Contacto Pelota::ColisionConPared(int windowWidth, int windowHeight) {
   switch (contacto.tipo) {
     case Colision::Arriba:
     case Colision::Abajo:
-      Mix_PlayChannel(-1, golpePared, 0);
+      Mix_PlayChannel(-1, golpe, 0);
 
       posicion.y += contacto.penetracion;
       velocidad.y = -velocidad.y;

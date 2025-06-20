@@ -1,5 +1,6 @@
 #include "puntaje_jugador.hpp"
 #include <string>
+#include "../configs.hpp"
 
 PuntajeJugador::PuntajeJugador(SDL_Renderer* renderer, TTF_Font* fuente,
                                Vec posicion)
@@ -18,12 +19,22 @@ PuntajeJugador::PuntajeJugador(SDL_Renderer* renderer, TTF_Font* fuente,
   rect.y = static_cast<int>(posicion.y);
   rect.w = width;
   rect.h = height;
+
+  sonido = Mix_LoadWAV(getAssetsPath("success-340660.mp3").c_str());
+  if (sonido == NULL) {
+    SDL_Log("Incapaz de inicializar Sonido: %s. Path: %s", SDL_GetError(),
+            getAssetsPath("success-340660.mp3").c_str());
+  }
 }
 
 // Destructor
 PuntajeJugador::~PuntajeJugador() {
   SDL_FreeSurface(surface);
   SDL_DestroyTexture(texture);
+
+  if (sonido != NULL) {
+    Mix_FreeChunk(sonido);
+  }
 }
 
 void PuntajeJugador::Dibujar() {
@@ -57,6 +68,8 @@ void PuntajeJugador::Reiniciar() {
 int PuntajeJugador::Puntaje() { return puntaje; }
 
 void PuntajeJugador::Aumentar() {
+  Mix_PlayChannel(-1, sonido, 0);
+
   puntaje++;
 
   SDL_FreeSurface(surface);
