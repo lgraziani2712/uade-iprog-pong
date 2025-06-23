@@ -71,6 +71,7 @@ void Pelota::Colision(Contacto contacto) {
 void Pelota::Reiniciar(float x, float y) {
   velocidad = Vec(celeridad, 0.0f);
   posicion = Vec(x - PELOTA_ANCHO / 2.0f, y - PELOTA_ALTO / 2.0f);
+  idContacto = -1;
 }
 
 Contacto Pelota::ColisionConPared(int windowWidth, int windowHeight) {
