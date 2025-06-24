@@ -68,7 +68,7 @@ void PuntajeJugador::Reiniciar() {
 int PuntajeJugador::Puntaje() { return puntaje; }
 
 void PuntajeJugador::Aumentar() {
-  Mix_PlayChannel(-1, sonido, 0);
+  Mix_PlayChannel(2, sonido, 0);
 
   puntaje++;
 

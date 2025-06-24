@@ -53,7 +53,7 @@ void Pelota::Colision(Contacto contacto) {
     return;
   }
   idContacto = contacto.id;
-  Mix_PlayChannel(-1, golpe, 0);
+  Mix_PlayChannel(2, golpe, 0);
 
   posicion.x += contacto.penetracion;
   velocidad.x = -velocidad.x;
@@ -100,7 +100,7 @@ Contacto Pelota::ColisionConPared(int windowWidth, int windowHeight) {
   switch (contacto.tipo) {
     case Colision::Arriba:
     case Colision::Abajo:
-      Mix_PlayChannel(-1, golpe, 0);
+      Mix_PlayChannel(2, golpe, 0);
 
       posicion.y += contacto.penetracion;
       velocidad.y = -velocidad.y;
