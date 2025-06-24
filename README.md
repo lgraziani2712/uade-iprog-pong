@@ -17,6 +17,9 @@
 - Sonido original del fuego: https://pixabay.com/sound-effects/short-fire-whoosh-1-317280/.
 - Stackoverflow y la web en general para las guías de uso de la librería SDL.
 - Sonido original del punto: https://pixabay.com/sound-effects/success-340660/.
+- Sonido original de navegación de menú: https://pixabay.com/sound-effects/radio-338296/.
+- Sonido original de selección de opción del menú: https://pixabay.com/sound-effects/8-bit-victory-sound-101319/.
+- Música: https://pixabay.com/music/video-games-best-game-console-301284/.
 - Ícono original: https://www.freepik.com/icon/ping-pong_1687641.
 
 ## Requisitos técnicos
@@ -112,13 +115,13 @@ Conan detecta y declara las siguientes propiedades en el perfil por defecto:
 arch=x86_64
 build_type=Release
 compiler=msvc
-compiler.cppstd=14
+compiler.cppstd=20
 compiler.runtime=dynamic
 compiler.version=194
 os=Windows
 ```
 
-> RECOMENDACIÓN: cambiar el valor de la entrada `compiler.cppstd` de 14 a 17 al menos.
+> RECOMENDACIÓN: cambiar el valor de la entrada `compiler.cppstd` a 20 mínimo.
 
 Para saber dónde guarda el perfil por defecto podemos correr el siguiente comando:
 

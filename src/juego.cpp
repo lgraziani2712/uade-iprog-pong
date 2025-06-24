@@ -25,6 +25,14 @@ Juego::Juego() {
 
   // Instancio las cosas que necesito
   fuente = TTF_OpenFont(getAssetsPath("HurmitNerdFont-Bold.otf").c_str(), 40);
+  autorFuente =
+      TTF_OpenFont(getAssetsPath("HurmitNerdFont-Bold.otf").c_str(), 16);
+  fuenteTitulo = TTF_OpenFont(getAssetsPath("Blanka.otf").c_str(), 120);
+  menuOpcion = Mix_LoadWAV(getAssetsPath("radio-338296.mp3").c_str());
+  menuSeleccion =
+      Mix_LoadWAV(getAssetsPath("8-bit-victory-sound-101319.mp3").c_str());
+
+  TTF_SetFontOutline(fuenteTitulo, 2);
 
   if (fuente == NULL) {
     throw std::runtime_error(SDL_GetError());
@@ -42,6 +50,18 @@ Juego::~Juego() {
 
   if (fuente != NULL) {
     TTF_CloseFont(fuente);
+  }
+  if (autorFuente != NULL) {
+    TTF_CloseFont(autorFuente);
+  }
+  if (fuenteTitulo != NULL) {
+    TTF_CloseFont(fuenteTitulo);
+  }
+  if (menuOpcion != NULL) {
+    Mix_FreeChunk(menuOpcion);
+  }
+  if (menuSeleccion != NULL) {
+    Mix_FreeChunk(menuSeleccion);
   }
 }
 // Inicializa el loop inicial del juego
@@ -77,20 +97,35 @@ void Juego::Menu() {
   SDL_Event event;
   // 0 a 3
   int posicion = 0;
+  const SDL_Color SELECTED_OPTION = {0xAA, 0x44, 0x33, 0xFF};
+  const SDL_Color NON_SELECTED_OPTION = {0xFF, 0xFF, 0xFF, 0xFF};
+
   std::array<const char *, 4> textosNoSeleccionados = {
       "Jugar Solo", "Jugar 1v1", "Ranking", "Salir"};
   std::array<const char *, 4> textosSeleccionados = {"JUGAR SOLO", "JUGAR 1v1",
                                                      "RANKING", "SALIR"};
 
+  auto titulo = Texto(renderer, fuenteTitulo, "PONG", Alineacion::Centro,
+                      Vec(width / 2, 100));
+  auto autor = Texto(renderer, autorFuente,
+                     "Luciano Graziani <lgraziani@uade.edu.ar> 2025 para "
+                     "Introduccion a la programacion, UADE.",
+                     Alineacion::Centro, Vec(width / 2, height - 40));
+
+  titulo.Color(SELECTED_OPTION);
+
   std::array<Texto, 4> textos = {
       Texto(renderer, fuente, textosSeleccionados[0], Alineacion::Centro,
             Vec(width / 2, (height / 2) - 150)),
-      Texto(renderer, fuente, textosSeleccionados[1], Alineacion::Centro,
+      Texto(renderer, fuente, textosNoSeleccionados[1], Alineacion::Centro,
             Vec(width / 2, (height / 2) - 50)),
       Texto(renderer, fuente, textosNoSeleccionados[2], Alineacion::Centro,
             Vec(width / 2, (height / 2) + 50)),
       Texto(renderer, fuente, textosNoSeleccionados[3], Alineacion::Centro,
             Vec(width / 2, (height / 2) + 150))};
+
+  // Inicializo el primer texto seleccionado con color
+  textos[posicion].Color(SELECTED_OPTION);
 
   while (estado == JuegoEstado::MENU) {
     while (SDL_PollEvent(&event)) {
@@ -100,25 +135,33 @@ void Juego::Menu() {
       }
       switch (event.key.keysym.sym) {
         case SDLK_UP:
+          Mix_PlayChannel(2, menuOpcion, 0);
           // Corrijo el texto actual para que figure como deseleccionado
           textos[posicion].Actualizar(textosNoSeleccionados[posicion]);
+          textos[posicion].Color(NON_SELECTED_OPTION);
 
           posicion--;
           posicion = posicion < 0 ? 3 : posicion;
 
           // Corrijo el texto actual para que figure como seleccionado
           textos[posicion].Actualizar(textosSeleccionados[posicion]);
+          textos[posicion].Color(SELECTED_OPTION);
           break;
         case SDLK_DOWN:
+          Mix_PlayChannel(2, menuOpcion, 0);
           // Corrijo el texto actual para que figure como deseleccionado
           textos[posicion].Actualizar(textosNoSeleccionados[posicion]);
+          textos[posicion].Color(NON_SELECTED_OPTION);
 
           posicion = (posicion + 1) % 4;
 
           // Corrijo el texto actual para que figure como seleccionado
           textos[posicion].Actualizar(textosSeleccionados[posicion]);
+          textos[posicion].Color(SELECTED_OPTION);
           break;
         case SDLK_RETURN:
+          Mix_PlayChannel(2, menuSeleccion, 0);
+
           switch (posicion) {
             case 0:
               render->Iniciar(TipoJugador::CPU);
@@ -143,6 +186,9 @@ void Juego::Menu() {
     // Limpia la pantalla en negro
     SDL_SetRenderDrawColor(renderer, 0x0, 0x0, 0x0, 0xFF);
     SDL_RenderClear(renderer);
+
+    titulo.Dibujar();
+    autor.Dibujar();
 
     for (int i = 0; i < textos.size(); i++) {
       textos[i].Dibujar();

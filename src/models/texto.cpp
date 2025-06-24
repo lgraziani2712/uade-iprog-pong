@@ -5,7 +5,8 @@ Texto::Texto(SDL_Renderer* renderer, TTF_Font* fuente, const char* texto,
     : renderer(renderer),
       fuente(fuente),
       posicion(posicion),
-      alineacion(alineacion) {
+      alineacion(alineacion),
+      texto(texto) {
   surface = TTF_RenderText_Solid(fuente, texto, {0xFF, 0xFF, 0xFF, 0xFF});
 
   if (surface == NULL) {
@@ -41,6 +42,8 @@ void Texto::Actualizar(const char* texto) {
   SDL_FreeSurface(surface);
   SDL_DestroyTexture(texture);
 
+  this->texto = texto;
+
   surface = TTF_RenderText_Solid(fuente, texto, {0xFF, 0xFF, 0xFF, 0xFF});
 
   if (surface == NULL) {
@@ -64,6 +67,20 @@ void Texto::Actualizar(const char* texto) {
   rect.y = static_cast<int>(posicion.y) - (height / 2);
   rect.w = width;
   rect.h = height;
+}
+
+void Texto::Color(SDL_Color color) {
+  surface = TTF_RenderText_Solid(fuente, texto, color);
+
+  if (surface == NULL) {
+    SDL_Log(SDL_GetError());
+  }
+
+  texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+  if (texture == NULL) {
+    SDL_Log(SDL_GetError());
+  }
 }
 
 void Texto::Dibujar() {

@@ -37,7 +37,7 @@ int SDL_main(int argc, char* argv[]) {
   auto music =
       Mix_LoadMUS(getAssetsPath("best-game-console-301284.mp3").c_str());
 
-  Mix_VolumeMusic(60);
+  Mix_VolumeMusic(40);
   Mix_FadeInMusic(music, -1, 240);
 
   // Esta variable contiene una instancia de tipo FinalAction (auto le pide

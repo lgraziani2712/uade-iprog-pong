@@ -13,10 +13,12 @@ class Texto {
   ~Texto();
 
   void Actualizar(const char* texto);
+  void Color(SDL_Color color);
   void Dibujar();
 
  private:
   Vec posicion;
+  const char* texto;
   SDL_Renderer* renderer;
   TTF_Font* fuente;
   SDL_Surface* surface{};

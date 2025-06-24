@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 #include <memory>
 #include "models/input.hpp"
@@ -20,6 +21,10 @@ class Juego {
   SDL_Window* window;
   SDL_Renderer* renderer;
   TTF_Font* fuente;
+  TTF_Font* autorFuente;
+  TTF_Font* fuenteTitulo;
+  Mix_Chunk* menuOpcion;
+  Mix_Chunk* menuSeleccion;
 
   std::unique_ptr<PongRender> render;
   std::unique_ptr<Input> input;

@@ -2,7 +2,7 @@
 
 ## Principales paradigmas
 
-- Programación Estructuradad
+- Programación Estructurada
   - Implementación de algoritmos
 - Programación modular
   - Bibliotecas utilitarias
