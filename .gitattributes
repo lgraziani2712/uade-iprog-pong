@@ -8,5 +8,6 @@
 
 *.png binary
 *.webp binary
+*.pdf binary
 
 * text eol=lf

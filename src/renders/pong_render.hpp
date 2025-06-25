@@ -34,6 +34,7 @@ class PongRender {
   uint64_t tiempoInicio = 0;
   uint64_t tiempoEnPausa = 0;
   PongEstado estado = PongEstado::FIN;
+  PongEstado estadoPrePausa;
   Resultado resultado;
 
   SDL_Window* window;

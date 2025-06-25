@@ -23,6 +23,9 @@ PongRender::PongRender(SDL_Window* window, SDL_Renderer* renderer,
 PongRender::~PongRender() {}
 
 void PongRender::Dibujar() {
+  if (estado == PongEstado::PAUSAR) {
+    return;
+  }
   // Limpia la pantalla en negro
   SDL_SetRenderDrawColor(renderer, 0x0, 0x0, 0x0, 0xFF);
   SDL_RenderClear(renderer);
@@ -61,10 +64,11 @@ void PongRender::Iniciar(TipoJugador tipo) {
 
 void PongRender::Pausar(bool pausar) {
   if (pausar) {
+    estadoPrePausa = estado;
     estado = PongEstado::PAUSAR;
     tiempoEnPausa = SDL_GetTicks64();
   } else {
-    estado = PongEstado::EN_JUEGO;
+    estado = estadoPrePausa;
     input->Reiniciar();
 
     // Adelanto N ms según el tiempo en pausa para que no siga sumando segundos
@@ -92,6 +96,9 @@ void PongRender::ActualizarInputs() {
 }
 
 void PongRender::Recalcular(double deltaTime) {
+  if (estado == PongEstado::PAUSAR) {
+    return;
+  }
   contador->Actualizar(
       std::format("{:.2f}s",
                   (double)(SDL_GetTicks64() - tiempoInicio) / (double)1000.0)

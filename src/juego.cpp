@@ -111,6 +111,8 @@ void Juego::Menu() {
                      "Luciano Graziani <lgraziani@uade.edu.ar> 2025 para "
                      "Introduccion a la programacion, UADE.",
                      Alineacion::Centro, Vec(width / 2, height - 40));
+  auto version =
+      Texto(renderer, autorFuente, "v1.0.4", Alineacion::Dcha, Vec(width, 10));
 
   titulo.Color(SELECTED_OPTION);
 
@@ -189,6 +191,7 @@ void Juego::Menu() {
 
     titulo.Dibujar();
     autor.Dibujar();
+    version.Dibujar();
 
     for (int i = 0; i < textos.size(); i++) {
       textos[i].Dibujar();
@@ -282,6 +285,7 @@ void Juego::Finalizado() {
       ("- Resultado:  " +
        (std::string)(resultado.estado == PartidaEstado::QUIT     ? "Cancelada"
                      : resultado.estado == PartidaEstado::Empate ? "Empate"
+                     : resultado.estado == PartidaEstado::P_CPU ? "Victoria CPU"
                      : resultado.estado == PartidaEstado::JUGADOR_1
                          ? "Victoria P1"
                          : "Victoria P2") +
