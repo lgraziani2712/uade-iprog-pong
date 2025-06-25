@@ -1,15 +1,17 @@
 # Pong - Proyecto para "UADE::Introducción a la programación"
 
+- Repositorio en github: https://github.com/lgraziani2712/uade-iprog-pong.
+
 ## Herramientas utilizadas en el proyecto:
 
-- Adobe Audition: para recortar y comprimir sonidos.
-- Adobe Photoshop: para editar las imágenes.
-- VSCode: editor de código, compilador y debugger.
-- PowerShell: terminal de línea de comandos.
-- Conan: para administrar las dependencias del proyecto.
-- CMake para compilar la versión debugger y producción.
-- Clang: para formatear el código.
-- Git: para llevar historial de cambios y documentar el proceso.
+- **Adobe Audition**: para recortar y comprimir sonidos.
+- **Adobe Photoshop**: para editar las imágenes.
+- **VSCode**: editor de código, compilador y debugger.
+- **PowerShell**: terminal de línea de comandos.
+- **Conan**: para administrar las dependencias del proyecto.
+- **CMake**: para compilar la versión debugger y producción.
+- **Clang**: para formatear el código.
+- **Git**: para llevar historial de cambios y documentar el proceso.
 
 ## Recursos de terceros utilizados:
 
@@ -21,6 +23,10 @@
 - Sonido original de selección de opción del menú: https://pixabay.com/sound-effects/8-bit-victory-sound-101319/.
 - Música: https://pixabay.com/music/video-games-best-game-console-301284/.
 - Ícono original: https://www.freepik.com/icon/ping-pong_1687641.
+
+## Proceso de desarrollo
+
+![Historial de cambios](docs/historial-cambios.jpg "Historial de cambios")
 
 ## Requisitos técnicos
 
