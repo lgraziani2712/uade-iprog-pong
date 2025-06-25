@@ -1,5 +1,6 @@
-*.eot binary
-*.ttf binary
+* text eol=lf
+
+*.otf binary
 *.woff binary
 *.woff2 binary
 
@@ -9,5 +10,3 @@
 *.png binary
 *.webp binary
 *.pdf binary
-
-* text eol=lf
