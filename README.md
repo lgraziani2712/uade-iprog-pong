@@ -1,5 +1,11 @@
 # Pong - Proyecto para "UADE::Introducción a la programación"
 
+- Autor: Graziani Luciano <lgraziani@uade.edu.ar>. LU: 1222435.
+- Materia: Introducción a la programación.
+- Cursada: 2025.
+- Fecha entrega: 25/06/2025.
+- Profesor: Pepe Jonathan <jpepe@uadeeduar.onmicrosoft.com>.
+- Ayudante: Narducci Adrián <adnarducci@uade.edu.ar>.
 - Repositorio en github: https://github.com/lgraziani2712/uade-iprog-pong.
 
 ## Herramientas utilizadas en el proyecto:
